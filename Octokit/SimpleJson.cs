@@ -1485,14 +1485,27 @@ namespace Octokit
                             obj = value;
                         else
                         {
-                            obj = ConstructorCache[type]();
-                            foreach (KeyValuePair<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>> setter in SetCache[type])
+                            if (ConstructorCache.ContainsKey(type))
                             {
-                                object jsonValue;
-                                if (jsonObject.TryGetValue(setter.Key, out jsonValue))
+                                obj = ConstructorCache[type]();
+                                if (SetCache.ContainsKey(type))
                                 {
-                                    jsonValue = DeserializeObject(jsonValue, setter.Value.Key);
-                                    setter.Value.Value(obj, jsonValue);
+                                    foreach (KeyValuePair<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>> setter in SetCache[type])
+                                    {
+                                        object jsonValue;
+                                        if (jsonObject.TryGetValue(setter.Key, out jsonValue))
+                                        {
+                                            jsonValue = DeserializeObject(jsonValue, setter.Value.Key);
+                                            try
+                                            {
+                                                setter.Value.Value(obj, jsonValue);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                Console.WriteLine($"Failed to set value '{jsonValue}' to property '{setter.Key}' of type '{setter.Value.Key}' for type '{type}' - {e.Message}");
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -2065,13 +2078,21 @@ namespace Octokit
 
             public static SetDelegate GetSetMethodByExpression(PropertyInfo propertyInfo)
             {
-                MethodInfo setMethodInfo = GetSetterMethodInfo(propertyInfo);
-                ParameterExpression instance = Expression.Parameter(typeof(object), "instance");
-                ParameterExpression value = Expression.Parameter(typeof(object), "value");
-                UnaryExpression instanceCast = (!IsValueType(propertyInfo.DeclaringType)) ? Expression.TypeAs(instance, propertyInfo.DeclaringType) : Expression.Convert(instance, propertyInfo.DeclaringType);
-                UnaryExpression valueCast = (!IsValueType(propertyInfo.PropertyType)) ? Expression.TypeAs(value, propertyInfo.PropertyType) : Expression.Convert(value, propertyInfo.PropertyType);
-                Action<object, object> compiled = Expression.Lambda<Action<object, object>>(Expression.Call(instanceCast, setMethodInfo, valueCast), new ParameterExpression[] { instance, value }).Compile();
-                return delegate (object source, object val) { compiled(source, val); };
+                try
+                {
+                    MethodInfo setMethodInfo = GetSetterMethodInfo(propertyInfo);
+                    ParameterExpression instance = Expression.Parameter(typeof(object), "instance");
+                    ParameterExpression value = Expression.Parameter(typeof(object), "value");
+                    UnaryExpression instanceCast = (!IsValueType(propertyInfo.DeclaringType)) ? Expression.TypeAs(instance, propertyInfo.DeclaringType) : Expression.Convert(instance, propertyInfo.DeclaringType);
+                    UnaryExpression valueCast = (!IsValueType(propertyInfo.PropertyType)) ? Expression.TypeAs(value, propertyInfo.PropertyType) : Expression.Convert(value, propertyInfo.PropertyType);
+                    Action<object, object> compiled = Expression.Lambda<Action<object, object>>(Expression.Call(instanceCast, setMethodInfo, valueCast), new ParameterExpression[] { instance, value }).Compile();
+                    return delegate (object source, object val) { compiled(source, val); };
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }
 
             public static SetDelegate GetSetMethodByExpression(FieldInfo fieldInfo)
