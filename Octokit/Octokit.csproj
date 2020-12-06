@@ -4,13 +4,13 @@
     <Description>An async-based GitHub API client library for .NET and .NET Core</Description>
     <AssemblyTitle>Octokit</AssemblyTitle>
     <Authors>GitHub</Authors>
-    <Version>0.0.0-dev</Version>
+    <Version>1.0.0</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Octokit</AssemblyName>
-    <PackageId>Octokit</PackageId>
+    <PackageId>Apiiro.Octokit</PackageId>
     <DebugType>embedded</DebugType>
     <RepositoryUrl>https://github.com/octokit/octokit.net</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/octokit/octokit.net</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/apiiro/octokit.net</PackageProjectUrl>
     <PackageIconUrl>https://f.cloud.github.com/assets/19977/1510987/64af2b26-4a9d-11e3-89fc-96a185171c75.png</PackageIconUrl>
     <PackageIcon>octokit.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
