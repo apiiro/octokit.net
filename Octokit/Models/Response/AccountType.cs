@@ -20,6 +20,12 @@ namespace Octokit
         /// Bot account
         /// </summary>
         [Parameter(Value = "Bot")]
-        Bot
+        Bot,
+        
+        /// <summary>
+        /// Mannequin (imported) account
+        /// </summary>
+        [Parameter(Value = "Mannequin")]
+        Mannequin
     }
 }
