@@ -9,7 +9,7 @@ namespace Octokit
     {
         public InstallationPermissions() { }
 
-        public InstallationPermissions(InstallationPermissionLevel? metadata, InstallationPermissionLevel? administration, InstallationPermissionLevel? statuses, InstallationPermissionLevel? deployments, InstallationPermissionLevel? issues, InstallationPermissionLevel? pages, InstallationPermissionLevel? pullRequests, InstallationPermissionLevel? contents, InstallationPermissionLevel? singleFile, InstallationPermissionLevel? repositoryProjects, InstallationPermissionLevel? members, InstallationPermissionLevel? organizationProjects, InstallationPermissionLevel? teamDiscussions, InstallationPermissionLevel? checks)
+        public InstallationPermissions(InstallationPermissionLevel? metadata, InstallationPermissionLevel? administration, InstallationPermissionLevel? statuses, InstallationPermissionLevel? deployments, InstallationPermissionLevel? issues, InstallationPermissionLevel? pages, InstallationPermissionLevel? pullRequests, InstallationPermissionLevel? contents, InstallationPermissionLevel? secretScanningAlert, InstallationPermissionLevel? singleFile, InstallationPermissionLevel? repositoryProjects, InstallationPermissionLevel? members, InstallationPermissionLevel? organizationProjects, InstallationPermissionLevel? teamDiscussions, InstallationPermissionLevel? checks)
         {
             Metadata = metadata;
             Administration = administration;
@@ -19,6 +19,7 @@ namespace Octokit
             Pages = pages;
             PullRequests = pullRequests;
             Contents = contents;
+            SecretScanningAlert = secretScanningAlert;
             SingleFile = singleFile;
             RepositoryProjects = repositoryProjects;
             Members = members;
@@ -76,6 +77,11 @@ namespace Octokit
         public StringEnum<InstallationPermissionLevel>? Contents { get; protected set; }
 
         /// <summary>
+        /// Secret scanning alert
+        /// View and manage secret scanning alerts.
+        /// </summary>
+        public StringEnum<InstallationPermissionLevel>? SecretScanningAlert { get; protected set; }/// <summary>
+        
         /// Single file
         /// Manage just a single file.
         /// </summary>
