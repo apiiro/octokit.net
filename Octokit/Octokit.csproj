@@ -16,11 +16,11 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>GitHub API Octokit linqpad-samples dotnetcore</PackageTags>
     <Copyright>Copyright GitHub 2017</Copyright>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>9</LangVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
     <DefineConstants>$(DefineConstants);HAS_ENVIRONMENT;HAS_REGEX_COMPILED_OPTIONS;SIMPLE_JSON_INTERNAL;SIMPLE_JSON_OBJARRAYINTERNAL;SIMPLE_JSON_READONLY_COLLECTIONS;HAS_SERVICEPOINTMANAGERS</DefineConstants>
   </PropertyGroup>
 
