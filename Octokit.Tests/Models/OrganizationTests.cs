@@ -53,6 +53,8 @@ public class OrganizationTest
 
         Assert.Equal("octocat", org.Login);
         Assert.Equal(1234, org.Id);
+        Assert.Equal(45, org.Plan.Seats);
+        Assert.Equal(45, org.Plan.FilledSeats);
     }
 }
 

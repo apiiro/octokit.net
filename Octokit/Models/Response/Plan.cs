@@ -9,7 +9,9 @@ namespace Octokit
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class Plan
     {
-        public Plan() { }
+        public Plan()
+        {
+        }
 
         public Plan(long collaborators, string name, long privateRepos, long space, string billingEmail)
         {
@@ -47,6 +49,16 @@ namespace Octokit
         /// The billing email for the organization. Only has a value in response to editing an organization.
         /// </summary>
         public string BillingEmail { get; protected set; }
+
+        /// <summary>
+        /// The number of seats in the organization
+        /// </summary>
+        public long Seats { get; protected set; }
+
+        /// <summary>
+        /// The number of filled seats in the organization
+        /// </summary>
+        public long FilledSeats { get; protected set; }
 
         internal string DebuggerDisplay
         {
