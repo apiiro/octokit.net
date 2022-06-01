@@ -203,5 +203,15 @@ namespace Octokit
 
             return ApiConnection.Get<Installation>(ApiUrls.UserInstallation(user), null, AcceptHeaders.GitHubAppsPreview);
         }
+
+        /// <summary>
+        /// Uninstalls a GitHub App on a user, organization, or business account (requires GitHubApp auth).
+        /// </summary>
+        /// <remarks>https://docs.github.com/en/rest/apps/apps#delete-an-installation-for-the-authenticated-app</remarks>
+        /// <param name="installationId">The Id of the GitHub App Installation</param>
+        public Task DeleteInstallationForCurrent(long installationId)
+        {
+            return ApiConnection.Delete(ApiUrls.Installation(installationId));
+        }
     }
 }
