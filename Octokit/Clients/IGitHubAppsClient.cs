@@ -112,5 +112,12 @@ namespace Octokit
         /// <remarks>https://developer.github.com/v3/apps/#find-user-installation</remarks>
         /// <param name="user">The name of the user</param>
         Task<Installation> GetUserInstallationForCurrent(string user);
+        
+        /// <summary>
+        /// Uninstalls a GitHub App on a user, organization, or business account (requires GitHubApp auth).
+        /// </summary>
+        /// <remarks>https://docs.github.com/en/rest/apps/apps#delete-an-installation-for-the-authenticated-app</remarks>
+        /// <param name="installationId">The Id of the GitHub App Installation</param>
+        Task DeleteInstallationForCurrent(long installationId);
     }
 }
