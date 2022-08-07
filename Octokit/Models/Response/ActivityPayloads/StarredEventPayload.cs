@@ -3,8 +3,7 @@
 namespace Octokit
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class StarredEventPayload : ActivityPayload
+    public class StarredEventPayload : ActivityWithActionPayload
     {
-        public string Action { get; protected set; }
     }
 }

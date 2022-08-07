@@ -3,9 +3,8 @@
 namespace Octokit
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class CheckSuiteEventPayload : ActivityPayload
+    public class CheckSuiteEventPayload : ActivityWithActionPayload
     {
-        public string Action { get; protected set; }
         public CheckSuite CheckSuite { get; protected set; }
     }
 }
