@@ -3,9 +3,8 @@
 namespace Octokit
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class PullRequestEventPayload : ActivityPayload
+    public class PullRequestEventPayload : ActivityWithActionPayload
     {
-        public string Action { get; protected set; }
         public int Number { get; protected set; }
 
         public PullRequest PullRequest { get; protected set; }

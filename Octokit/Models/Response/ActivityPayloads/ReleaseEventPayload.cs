@@ -3,10 +3,8 @@
 namespace Octokit
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class ReleaseEventPayload : ActivityPayload
+    public class ReleaseEventPayload : ActivityWithActionPayload
     {
-        public string Action { get; protected set; }
-
         public Release Release { get; protected set; }
     }
 }
