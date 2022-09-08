@@ -21,7 +21,7 @@ namespace Octokit
 
         internal string DebuggerDisplay
         {
-            get { return Repository.FullName; }
+            get { return Repository?.FullName; }
         }
     }
 }
