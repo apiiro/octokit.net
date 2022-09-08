@@ -209,6 +209,8 @@ namespace Octokit
         /// </summary>
         /// <remarks>https://docs.github.com/en/rest/apps/apps#delete-an-installation-for-the-authenticated-app</remarks>
         /// <param name="installationId">The Id of the GitHub App Installation</param>
+        [Preview("machine-man")]
+        [ManualRoute("DELETE", "/app/installations/{installationId}")]
         public Task DeleteInstallationForCurrent(long installationId)
         {
             return ApiConnection.Delete(ApiUrls.Installation(installationId));

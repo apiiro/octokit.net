@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive;
 using System.Reactive.Threading.Tasks;
 using Octokit.Reactive.Internal;
 
@@ -174,6 +175,11 @@ namespace Octokit.Reactive
             Ensure.ArgumentNotNullOrEmptyString(user, nameof(user));
 
             return _client.GetUserInstallationForCurrent(user).ToObservable();
+        }
+
+        public IObservable<Unit> DeleteInstallationForCurrent(long installationId)
+        {
+            return _client.DeleteInstallationForCurrent(installationId).ToObservable();
         }
     }
 }
