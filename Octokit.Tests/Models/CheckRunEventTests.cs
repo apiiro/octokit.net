@@ -246,6 +246,7 @@ namespace Octokit.Tests.Models
 
             var payload = serializer.Deserialize<CheckRunEventPayload>(json);
 
+            Assert.Equal(1, payload.Installation.Id);
             Assert.Equal("rerequested", payload.Action);
             Assert.Equal("d6fde92930d4715a2b49857d24b940956b26d2d3", payload.CheckRun.HeadSha);
             Assert.Equal(4, payload.CheckRun.Id);

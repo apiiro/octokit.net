@@ -15,6 +15,7 @@ namespace Octokit.Tests.Models
 
             var payload = serializer.Deserialize<CheckSuiteEventPayload>(json);
 
+            Assert.Equal(103621, payload.Installation.Id);
             Assert.Equal("rerequested", payload.Action);
             Assert.Equal("73955d02043135d48809add98052c2170522158f", payload.CheckSuite.HeadSha);
             Assert.Equal(CheckStatus.Queued, payload.CheckSuite.Status.Value);

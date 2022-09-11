@@ -13,13 +13,15 @@ namespace Octokit
         {
         }
 
-        public Plan(long collaborators, string name, long privateRepos, long space, string billingEmail)
+        public Plan(long collaborators, string name, long privateRepos, long space, string billingEmail, long seats, long filledSeats)
         {
             Collaborators = collaborators;
             Name = name;
             PrivateRepos = privateRepos;
             Space = space;
             BillingEmail = billingEmail;
+            Seats = seats;
+            FilledSeats = filledSeats;
         }
 
         /// <summary>
