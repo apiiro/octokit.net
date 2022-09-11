@@ -8,16 +8,14 @@ namespace Octokit
         public ActivityPayload() { }
 
 
-        public ActivityPayload(Repository repository, User sender, InstallationId installation)
+        public ActivityPayload(Repository repository, User sender)
         {
             Repository = repository;
             Sender = sender;
-            Installation = installation;
         }
 
         public Repository Repository { get; protected set; }
         public User Sender { get; protected set; }
-        public InstallationId Installation { get; protected set; }
 
         internal string DebuggerDisplay
         {
