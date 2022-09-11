@@ -139,6 +139,7 @@ public class InstallationEventTest
 
         var installationEvent = serializer.Deserialize<InstallationEventPayload>(json);
 
+        Assert.Equal(29024610, installationEvent.Installation.Id);
         Assert.Equal("deleted", installationEvent.Action);
         Assert.Equal("https://github.com/tomer-apiiro-test", installationEvent.Installation.Account?.HtmlUrl);
         Assert.Equal(6, installationEvent.Repositories.Count);
