@@ -7,7 +7,5 @@ namespace Octokit
     public class InstallationEventPayload : ActivityWithActionPayload
     {
         public IReadOnlyCollection<Repository> Repositories { get; set; }
-
-        public Installation Installation { get; set; }
     }
 }
