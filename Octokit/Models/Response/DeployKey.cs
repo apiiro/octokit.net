@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace Octokit
@@ -20,13 +21,18 @@ namespace Octokit
         public string Key { get; protected set; }
         public string Url { get; protected set; }
         public string Title { get; protected set; }
+        public bool Verified { get; protected set; }
+        public DateTimeOffset CreatedAt { get; protected set; }
+        public bool ReadOnly { get; protected set; }
+        public string AddedBy { get; protected set; }
+        public DateTimeOffset LastUsed { get; protected set; }
 
         internal string DebuggerDisplay
         {
             get
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "Deploy Key: Id: {0} Key: {1} Url: {2} Title: {3}", Id, Key, Url, Title);
+                    "Deploy Key: Id: {0} Key: {1} Url: {2} Title: {3} Verified: {4} CreatedAt: {5} ReadOnly: {6} AddedBy: {7}, LastUsed: {8}", Id, Key, Url, Title, Verified, CreatedAt, ReadOnly, AddedBy, LastUsed);
             }
         }
     }
