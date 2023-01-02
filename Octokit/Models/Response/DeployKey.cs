@@ -9,12 +9,17 @@ namespace Octokit
     {
         public DeployKey() { }
 
-        public DeployKey(int id, string key, string url, string title)
+        public DeployKey(int id, string key, string url, string title, bool verified, DateTimeOffset createdAt, bool readOnly, string addedBy, DateTimeOffset lastUsed)
         {
             Id = id;
             Key = key;
             Url = url;
             Title = title;
+            Verified = verified;
+            CreatedAt = createdAt;
+            ReadOnly = readOnly;
+            AddedBy = addedBy;
+            LastUsed = lastUsed;
         }
 
         public int Id { get; protected set; }
