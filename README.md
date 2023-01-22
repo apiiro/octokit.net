@@ -14,7 +14,7 @@ To push to apiiro nuget package:
 ```bash
 cd Octokit
 dotnet pack --configuration Release
-dotnet nuget push bin/Release/Apiiro.Octokit.*.nupkg --source "github" --skip-duplicate --no-symbols true
+dotnet nuget push bin/Release/Apiiro.Octokit.*.nupkg --source "github" --skip-duplicate --no-symbols
 ```
 
 Octokit is a client library targeting .NET Framework 4.5+ and .NET Standard 1+
