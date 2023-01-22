@@ -9,7 +9,7 @@ namespace Octokit
     {
         public DeployKey() { }
 
-        public DeployKey(int id, string key, string url, string title, bool verified, DateTimeOffset createdAt, bool readOnly, string addedBy, DateTimeOffset lastUsed)
+        public DeployKey(int id, string key, string url, string title, bool verified, DateTimeOffset createdAt, bool readOnly, string addedBy, DateTimeOffset? lastUsed)
         {
             Id = id;
             Key = key;
@@ -30,7 +30,7 @@ namespace Octokit
         public DateTimeOffset CreatedAt { get; protected set; }
         public bool ReadOnly { get; protected set; }
         public string AddedBy { get; protected set; }
-        public DateTimeOffset LastUsed { get; protected set; }
+        public DateTimeOffset? LastUsed { get; protected set; }
 
         internal string DebuggerDisplay
         {
