@@ -88,7 +88,7 @@ namespace Octokit
         /// <param name="options">Options for changing the API response</param>
         /// <returns><see cref="IReadOnlyList{T}"/> of the API resources in the list.</returns>
         /// <exception cref="ApiException">Thrown when an API error occurs.</exception>
-        Task<IReadOnlyList<T>> GetAll<T>(Uri uri, ApiOptions options);
+        Task<IReadOnlyList<T>> GetAll<T>(Uri uri, ApiOptions options, bool enableETags = true);
 
         /// <summary>
         /// Gets all API resources in the list at the specified URI.
@@ -142,7 +142,7 @@ namespace Octokit
         /// <param name="options">Options for changing the API response</param>
         /// <returns><see cref="IReadOnlyList{T}"/> of the API resources in the list.</returns>
         /// <exception cref="ApiException">Thrown when an API error occurs.</exception>
-        Task<IReadOnlyList<T>> GetAll<T>(Uri uri, IDictionary<string, string> parameters, string accepts, ApiOptions options);
+        Task<IReadOnlyList<T>> GetAll<T>(Uri uri, IDictionary<string, string> parameters, string accepts, ApiOptions options, bool enableETags = true);
 
         /// <summary>
         /// Creates a new API resource in the list at the specified URI.

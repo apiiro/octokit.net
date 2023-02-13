@@ -141,9 +141,9 @@ namespace Octokit
         /// <param name="options">Options for changing the API response</param>
         /// <returns><see cref="IReadOnlyList{T}"/> of the API resources in the list.</returns>
         /// <exception cref="ApiException">Thrown when an API error occurs.</exception>
-        public Task<IReadOnlyList<T>> GetAll<T>(Uri uri, ApiOptions options)
+        public Task<IReadOnlyList<T>> GetAll<T>(Uri uri, ApiOptions options, bool enableETags = true)
         {
-            return GetAll<T>(uri, null, null, options);
+            return GetAll<T>(uri, null, null, options, enableETags);
         }
 
         /// <summary>
@@ -202,14 +202,14 @@ namespace Octokit
             return _pagination.GetAllPages(async () => await GetPage<T>(uri, parameters, accepts).ConfigureAwait(false), uri);
         }
 
-        public Task<IReadOnlyList<T>> GetAll<T>(Uri uri, IDictionary<string, string> parameters, string accepts, ApiOptions options)
+        public Task<IReadOnlyList<T>> GetAll<T>(Uri uri, IDictionary<string, string> parameters, string accepts, ApiOptions options, bool enableETags = true)
         {
             Ensure.ArgumentNotNull(uri, nameof(uri));
             Ensure.ArgumentNotNull(options, nameof(options));
 
             parameters = Pagination.Setup(parameters, options);
 
-            return _pagination.GetAllPages(async () => await GetPage<T>(uri, parameters, accepts, options).ConfigureAwait(false), uri);
+            return _pagination.GetAllPages(async () => await GetPage<T>(uri, parameters, accepts, options, enableETags).ConfigureAwait(false), uri);
         }
 
         /// <summary>
@@ -613,13 +613,14 @@ namespace Octokit
             Uri uri,
             IDictionary<string, string> parameters,
             string accepts,
-            ApiOptions options)
+            ApiOptions options,
+            bool enableETags)
         {
             Ensure.ArgumentNotNull(uri, nameof(uri));
 
             var connection = Connection;
 
-            var response = await connection.Get<List<TU>>(uri, parameters, accepts).ConfigureAwait(false);
+            var response = await connection.Get<List<TU>>(uri, parameters, accepts, enableETags).ConfigureAwait(false);
             return new ReadOnlyPagedCollection<TU>(
                 response,
                 nextPageUri =>

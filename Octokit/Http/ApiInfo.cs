@@ -13,6 +13,7 @@ namespace Octokit
             IList<string> oauthScopes,
             IList<string> acceptedOauthScopes,
             string etag,
+            string lastModified,
             RateLimit rateLimit,
             TimeSpan serverTimeDifference = default)
         {
@@ -24,6 +25,7 @@ namespace Octokit
             OauthScopes = new ReadOnlyCollection<string>(oauthScopes);
             AcceptedOauthScopes = new ReadOnlyCollection<string>(acceptedOauthScopes);
             Etag = etag;
+            LastModified = lastModified;
             RateLimit = rateLimit;
             ServerTimeDifference = serverTimeDifference;
         }
@@ -42,6 +44,8 @@ namespace Octokit
         /// Etag
         /// </summary>
         public string Etag { get; private set; }
+
+        public string LastModified { get; private set; }
 
         /// <summary>
         /// Links to things like next/previous pages
@@ -74,6 +78,7 @@ namespace Octokit
                                OauthScopes.Clone(),
                                AcceptedOauthScopes.Clone(),
                                Etag != null ? new string(Etag.ToCharArray()) : null,
+                               LastModified != null ? new string(LastModified.ToCharArray()) : null,
                                RateLimit != null ? RateLimit.Clone() : null,
                                ServerTimeDifference);
         }

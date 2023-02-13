@@ -21,8 +21,12 @@ namespace Octokit
     /// </summary>
     public class Connection : IConnection
     {
+        private readonly Func<string, Task<(string etag, string lastModified)>> _getEtagHeadersAsync;
+        private readonly Func<string, string, string, Task> _setEtagHeadersAsync;
         static readonly Uri _defaultGitHubApiUrl = GitHubClient.GitHubApiUrl;
         static readonly ICredentialStore _anonymousCredentials = new InMemoryCredentialStore(Credentials.Anonymous);
+        
+        private readonly IReadOnlyCollection<HttpMethod> _safeHttpMethods = new[] { HttpMethod.Get, HttpMethod.Head, HttpMethod.Options, HttpMethod.Trace };
 
         readonly Authenticator _authenticator;
         readonly JsonHttpPipeline _jsonPipeline;
@@ -158,6 +162,26 @@ namespace Octokit
             _jsonPipeline = new JsonHttpPipeline(serializer);
         }
 
+        public Connection(
+            ProductHeaderValue productInformation,
+            Uri baseAddress,
+            ICredentialStore credentialStore,
+            IHttpClient httpClient,
+            IJsonSerializer serializer,
+            Func<string, Task<(string etag, string lastModified)>> getEtagHeadersAsync,
+            Func<string, string, string, Task> setEtagHeadersAsync
+        ) : this(
+            productInformation,
+            baseAddress,
+            credentialStore,
+            httpClient,
+            serializer
+        )
+        {
+            _getEtagHeadersAsync = getEtagHeadersAsync;
+            _setEtagHeadersAsync = setEtagHeadersAsync;
+        }
+
         /// <summary>
         /// Gets the latest API Info - this will be null if no API calls have been made
         /// </summary>
@@ -172,11 +196,11 @@ namespace Octokit
         }
         private ApiInfo _lastApiInfo;
 
-        public Task<IApiResponse<T>> Get<T>(Uri uri, IDictionary<string, string> parameters, string accepts)
+        public Task<IApiResponse<T>> Get<T>(Uri uri, IDictionary<string, string> parameters, string accepts, bool enableETags = true)
         {
             Ensure.ArgumentNotNull(uri, nameof(uri));
 
-            return SendData<T>(uri.ApplyParameters(parameters), HttpMethod.Get, null, accepts, null, CancellationToken.None);
+            return SendData<T>(uri.ApplyParameters(parameters), HttpMethod.Get, null, accepts, null, CancellationToken.None, enableETags: enableETags);
         }
 
         public Task<IApiResponse<T>> Get<T>(Uri uri, IDictionary<string, string> parameters, string accepts, CancellationToken cancellationToken)
@@ -387,7 +411,8 @@ namespace Octokit
             string contentType,
             CancellationToken cancellationToken,
             string twoFactorAuthenticationCode = null,
-            Uri baseAddress = null)
+            Uri baseAddress = null,
+            bool enableETags = true)
         {
             Ensure.ArgumentNotNull(uri, nameof(uri));
 
@@ -395,7 +420,8 @@ namespace Octokit
             {
                 Method = method,
                 BaseAddress = baseAddress ?? BaseAddress,
-                Endpoint = uri
+                Endpoint = uri,
+                EnableETags = enableETags
             };
 
             return SendDataInternal<T>(body, accepts, contentType, cancellationToken, twoFactorAuthenticationCode, request);
@@ -657,16 +683,76 @@ namespace Octokit
         async Task<IResponse> RunRequest(IRequest request, CancellationToken cancellationToken)
         {
             request.Headers.Add("User-Agent", UserAgent);
+
+            await SetEtagHeadersAsync(request);
+
             await _authenticator.Apply(request).ConfigureAwait(false);
             var response = await _httpClient.Send(request, cancellationToken).ConfigureAwait(false);
             if (response != null)
             {
+                await SaveEtagHeadersAsync(
+                    request,
+                    response.ApiInfo,
+                    response.StatusCode
+                );
+
                 // Use the clone method to avoid keeping hold of the original (just in case it effect the lifetime of the whole response
                 _lastApiInfo = response.ApiInfo.Clone();
             }
             HandleErrors(response);
             return response;
         }
+
+        async Task SetEtagHeadersAsync(IRequest request)
+        {
+            if (!request.EnableETags || _getEtagHeadersAsync == null || !_safeHttpMethods.Contains(request.Method))
+            {
+                return;
+            }
+
+            var (etag, lastModified) = await _getEtagHeadersAsync(GetRequestKey(request));
+            if (string.IsNullOrEmpty(etag))
+            {
+                return;
+            }
+            
+            request.Headers.Add("If-None-Match", etag);
+
+            if (string.IsNullOrEmpty(lastModified))
+            {
+                return;
+            }
+            
+            request.Headers.Add("If-Modified-Since", lastModified);
+        }
+
+        async Task SaveEtagHeadersAsync(IRequest request, ApiInfo responseInfo, HttpStatusCode statusCode)
+        {
+            if (!request.EnableETags || 
+                _setEtagHeadersAsync == null ||
+                responseInfo == null ||
+                statusCode != HttpStatusCode.OK ||
+                !_safeHttpMethods.Contains(request.Method))
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(responseInfo.Etag))
+            {
+                return;
+            }
+
+            await _setEtagHeadersAsync(
+                GetRequestKey(request),
+                responseInfo.Etag,
+                string.IsNullOrEmpty(responseInfo.LastModified)
+                    ? null
+                    : responseInfo.LastModified
+            );
+        }
+
+        static string GetRequestKey(IRequest request)
+            => $"{request.BaseAddress}/{request.Endpoint}";
 
         static readonly Dictionary<HttpStatusCode, Func<IResponse, Exception>> _httpExceptionMap =
             new Dictionary<HttpStatusCode, Func<IResponse, Exception>>

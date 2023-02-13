@@ -415,7 +415,7 @@ namespace Octokit
             Ensure.ArgumentNotNullOrEmptyString(login, nameof(login));
             Ensure.ArgumentNotNull(options, nameof(options));
 
-            return ApiConnection.GetAll<Repository>(ApiUrls.Repositories(login), options);
+            return ApiConnection.GetAll<Repository>(ApiUrls.Repositories(login), options, false);
         }
 
         /// <summary>
@@ -451,7 +451,7 @@ namespace Octokit
             Ensure.ArgumentNotNullOrEmptyString(organization, nameof(organization));
             Ensure.ArgumentNotNull(options, nameof(options));
 
-            return ApiConnection.GetAll<Repository>(ApiUrls.OrganizationRepositories(organization), options);
+            return ApiConnection.GetAll<Repository>(ApiUrls.OrganizationRepositories(organization), options, true);
         }
 
         /// <summary>

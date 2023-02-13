@@ -37,6 +37,7 @@ namespace Octokit.Internal
             var oauthScopes = new List<string>();
             var acceptedOauthScopes = new List<string>();
             string etag = null;
+            string lastModified = null;
 
             var acceptedOauthScopesKey = LookupHeader(responseHeaders, "X-Accepted-OAuth-Scopes");
             if (Exists(acceptedOauthScopesKey))
@@ -58,6 +59,12 @@ namespace Octokit.Internal
             if (Exists(etagKey))
             {
                 etag = etagKey.Value;
+            }
+            
+            var lastModifiedKey = LookupHeader(responseHeaders, "Last-Modified");
+            if (Exists(lastModifiedKey))
+            {
+                lastModified = lastModifiedKey.Value;
             }
 
             var linkKey = LookupHeader(responseHeaders, "Link");
@@ -85,7 +92,7 @@ namespace Octokit.Internal
                 serverTimeSkew = serverTime - receivedTime;
             }
 
-            return new ApiInfo(httpLinks, oauthScopes, acceptedOauthScopes, etag, new RateLimit(responseHeaders), serverTimeSkew);
+            return new ApiInfo(httpLinks, oauthScopes, acceptedOauthScopes, etag, lastModified, new RateLimit(responseHeaders), serverTimeSkew);
         }
     }
 }
