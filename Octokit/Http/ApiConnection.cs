@@ -141,7 +141,7 @@ namespace Octokit
         /// <param name="options">Options for changing the API response</param>
         /// <returns><see cref="IReadOnlyList{T}"/> of the API resources in the list.</returns>
         /// <exception cref="ApiException">Thrown when an API error occurs.</exception>
-        public Task<IReadOnlyList<T>> GetAll<T>(Uri uri, ApiOptions options, bool enableETags = true)
+        public Task<IReadOnlyList<T>> GetAll<T>(Uri uri, ApiOptions options, bool enableETags = false)
         {
             return GetAll<T>(uri, null, null, options, enableETags);
         }
@@ -202,7 +202,7 @@ namespace Octokit
             return _pagination.GetAllPages(async () => await GetPage<T>(uri, parameters, accepts).ConfigureAwait(false), uri);
         }
 
-        public Task<IReadOnlyList<T>> GetAll<T>(Uri uri, IDictionary<string, string> parameters, string accepts, ApiOptions options, bool enableETags = true)
+        public Task<IReadOnlyList<T>> GetAll<T>(Uri uri, IDictionary<string, string> parameters, string accepts, ApiOptions options, bool enableETags = false)
         {
             Ensure.ArgumentNotNull(uri, nameof(uri));
             Ensure.ArgumentNotNull(options, nameof(options));

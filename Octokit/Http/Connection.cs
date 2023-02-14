@@ -196,7 +196,7 @@ namespace Octokit
         }
         private ApiInfo _lastApiInfo;
 
-        public Task<IApiResponse<T>> Get<T>(Uri uri, IDictionary<string, string> parameters, string accepts, bool enableETags = true)
+        public Task<IApiResponse<T>> Get<T>(Uri uri, IDictionary<string, string> parameters, string accepts, bool enableETags = false)
         {
             Ensure.ArgumentNotNull(uri, nameof(uri));
 
@@ -412,7 +412,7 @@ namespace Octokit
             CancellationToken cancellationToken,
             string twoFactorAuthenticationCode = null,
             Uri baseAddress = null,
-            bool enableETags = true)
+            bool enableETags = false)
         {
             Ensure.ArgumentNotNull(uri, nameof(uri));
 

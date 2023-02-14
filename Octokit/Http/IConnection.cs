@@ -39,7 +39,7 @@ namespace Octokit
         /// <param name="accepts">Specifies accepted response media types.</param>
         /// <returns><seealso cref="IResponse"/> representing the received HTTP response</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Get")]
-        Task<IApiResponse<T>> Get<T>(Uri uri, IDictionary<string, string> parameters, string accepts, bool enableETags = true);
+        Task<IApiResponse<T>> Get<T>(Uri uri, IDictionary<string, string> parameters, string accepts, bool enableETags = false);
 
         /// <summary>
         /// Performs an asynchronous HTTP GET request.
