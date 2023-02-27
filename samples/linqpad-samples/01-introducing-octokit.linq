@@ -1,5 +1,5 @@
 <Query Kind="Program">
-  <NuGetReference>Apiiro.Octokit</NuGetReference>
+  <NuGetReference>Octokit</NuGetReference>
   <NuGetReference>Octokit.Reactive</NuGetReference>
   <Namespace>Octokit</Namespace>
   <Namespace>System.Reactive.Linq</Namespace>
