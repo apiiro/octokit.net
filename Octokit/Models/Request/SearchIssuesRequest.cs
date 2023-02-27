@@ -33,7 +33,7 @@ namespace Octokit
         }
 
         /// <summary>
-        /// Optional Sort field. One of comments, created, updated or merged 
+        /// Optional Sort field. One of comments, created, updated or merged
         /// If not provided, results are sorted by best match.
         /// </summary>
         /// <remarks>
@@ -56,7 +56,7 @@ namespace Octokit
         public IssueTypeQualifier? Type { get; set; }
 
         /// <summary>
-        /// Qualifies which fields are searched. With this qualifier you can restrict 
+        /// Qualifies which fields are searched. With this qualifier you can restrict
         /// the search to just the title, body, comments, or any combination of these.
         /// </summary>
         /// <remarks>
@@ -108,7 +108,7 @@ namespace Octokit
         public string Commenter { get; set; }
 
         /// <summary>
-        /// Finds issues that were either created by a certain user, assigned to that user, 
+        /// Finds issues that were either created by a certain user, assigned to that user,
         /// mention that user, or were commented on by that user.
         /// </summary>
         /// <remarks>
@@ -489,7 +489,11 @@ namespace Octokit
         [Parameter(Value = "private")]
         Private,
         [Parameter(Value = "public")]
-        Public
+        Public,
+        [Parameter(Value = "locked")]
+        Locked,
+        [Parameter(Value = "unlocked")]
+        Unlocked
     }
 
     public enum IssueNoMetadataQualifier
@@ -499,7 +503,9 @@ namespace Octokit
         [Parameter(Value = "milestone")]
         Milestone,
         [Parameter(Value = "assignee")]
-        Assignee
+        Assignee,
+        [Parameter(Value = "project")]
+        Project
     }
 
     [DebuggerDisplay("{DebuggerDisplay,nq}")]

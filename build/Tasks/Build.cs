@@ -1,20 +1,19 @@
-using Cake.Common.Tools.DotNetCore;
-using Cake.Common.Tools.DotNetCore.Build;
+using Cake.Common.Tools.DotNet;
+using Cake.Common.Tools.DotNet.Build;
 using Cake.Core;
 using Cake.Frosting;
 
-[Dependency(typeof(Restore))]
-[Dependency(typeof(FormatCode))]
+[IsDependentOn(typeof(Restore))]
+[IsDependentOn(typeof(FormatCode))]
 public class Build : FrostingTask<Context>
 {
     public override void Run(Context context)
     {
-        context.DotNetCoreBuild("./Octokit.sln", new DotNetCoreBuildSettings
+        context.DotNetBuild("./Octokit.sln", new DotNetBuildSettings
         {
             Configuration = context.Configuration,
             ArgumentCustomization = args => args
-                .Append("/p:Version={0}", context.Version.GetSemanticVersion())
-                .Append("/p:SourceLinkCreate={0}", context.LinkSources.ToString().ToLower()),
+                .Append("/p:Version={0}", context.Version.GetSemanticVersion()),
         });
     }
 }

@@ -120,8 +120,9 @@ public class IssueTest
 ""events_url"": ""https://api.github.com/users/octocat/events{/privacy}"",
 ""received_events_url"": ""https://api.github.com/users/octocat/received_events"",
 ""type"": ""User"",
-""site_admin"": false
-}
+""site_admin"": false,
+},
+""active_lock_reason"": null
 }";
         var serializer = new SimpleJsonSerializer();
 
@@ -130,6 +131,7 @@ public class IssueTest
         Assert.Equal(1347, issue.Number);
         Assert.Equal("octocat", issue.User.Login);
         Assert.Equal("bug", issue.Labels.First().Name);
+        Assert.Null(issue.ActiveLockReason);
     }
 
     public class TheToUpdateMethod
@@ -143,6 +145,7 @@ public class IssueTest
 ""html_url"": ""https://github.com/octocat/Hello-World/issues/1347"",
 ""number"": 1347,
 ""state"": ""open"",
+""state_reason"": ""reopened"",
 ""title"": ""Found a bug"",
 ""body"": ""I'm having a problem with this."",
 ""user"": {
@@ -281,6 +284,7 @@ public class IssueTest
             Assert.NotNull(update.Labels);
             Assert.Equal(1, update.Milestone.GetValueOrDefault());
             Assert.Equal("octocat", update.Assignees.FirstOrDefault());
+            Assert.Equal(ItemStateReason.Reopened, update.StateReason.GetValueOrDefault());
         }
     }
 }
