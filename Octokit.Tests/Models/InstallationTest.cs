@@ -64,6 +64,6 @@ public class InstallationTest
         var installation = serializer.Deserialize<Installation>(json);
 
         Assert.Equal(1, installation.Id);
-        Assert.Equal(InstallationPermissionLevel.Write, installation.Permissions.SecretScanningAlert);
+        Assert.Equal(InstallationPermissionLevel.Write, installation.Permissions.SecretScanningAlerts);
     }
 }

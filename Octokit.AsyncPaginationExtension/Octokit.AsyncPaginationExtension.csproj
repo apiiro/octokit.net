@@ -6,7 +6,7 @@
     <Authors>GitHub</Authors>
     <Version>0.0.0-dev</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>Octokit.AsyncPaginationExtension</AssemblyName>
     <PackageId>Octokit.AsyncPaginationExtension</PackageId>
     <DebugType>embedded</DebugType>
