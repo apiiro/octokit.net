@@ -30,7 +30,7 @@ namespace Octokit.Caching
                 return await _httpClient.Send(request, cancellationToken);
             }
 
-            var cachedResponse = await TryGetCachedResponse(request);
+            var cachedResponse = await TryGetCachedResponseAsync(request);
             if (cachedResponse != null && !string.IsNullOrEmpty(cachedResponse.ApiInfo.Etag))
             {
                 request.Headers["If-None-Match"] = cachedResponse.ApiInfo.Etag;
@@ -40,16 +40,16 @@ namespace Octokit.Caching
                     return cachedResponse;
                 }
 
-                TrySetCachedResponse(request, conditionalResponse);
+                await TrySetCachedResponseAsync(request, conditionalResponse);
                 return conditionalResponse;
             }
 
             var response = await _httpClient.Send(request, cancellationToken);
-            TrySetCachedResponse(request, response);
+            await TrySetCachedResponseAsync(request, response);
             return response;
         }
 
-        private async Task<IResponse> TryGetCachedResponse(IRequest request)
+        private async Task<IResponse> TryGetCachedResponseAsync(IRequest request)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace Octokit.Caching
             }
         }
 
-        private async Task TrySetCachedResponse(IRequest request, IResponse response)
+        private async Task TrySetCachedResponseAsync(IRequest request, IResponse response)
         {
             try
             {

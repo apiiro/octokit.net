@@ -40,7 +40,7 @@ public class InstallationTest
     ""checks"": ""write"",
     ""metadata"": ""read"",
     ""contents"": ""read"",
-    ""secret_scanning_alert"": ""write""
+    ""secret_scanning_alerts"": ""write""
   },
   ""events"": [
     ""push"",
