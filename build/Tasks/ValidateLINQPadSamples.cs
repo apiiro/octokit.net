@@ -80,7 +80,9 @@ public sealed class ValidateLINQPadSamples : FrostingTask<Context>
         using (var writer = new StreamWriter(stream))
         {
             // reference all known assemblies
-            //writer.WriteLine("ref {0}\\System.Reactive.dll;", directory);
+            writer.WriteLine("ref {0}\\System.Threading.Tasks.dll;", directory);
+            writer.WriteLine("ref {0}\\System.Net.Http.dll;", directory);
+            writer.WriteLine("ref {0}\\System.Reactive.dll;", directory);
             writer.WriteLine("ref {0}\\Octokit.dll;", directory);
             writer.WriteLine("ref {0}\\Octokit.Reactive.dll;", directory);
             // writer.WriteLine("ref C:\\Program Files (x86)\\Reference Assemblies\\Microsoft\\Framework\\.NETFramework\\v4.6\\System.Net.Http.dll;");
