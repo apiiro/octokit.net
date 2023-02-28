@@ -83,7 +83,7 @@ public sealed class ValidateLINQPadSamples : FrostingTask<Context>
             writer.WriteLine("ref {0}\\System.Reactive.dll;", directory);
             writer.WriteLine("ref {0}\\Octokit.dll;", directory);
             writer.WriteLine("ref {0}\\Octokit.Reactive.dll;", directory);
-            // writer.WriteLine("ref C:\\Program Files (x86)\\Reference Assemblies\\Microsoft\\Framework\\.NETFramework\\v4.6\\System.Net.Http.dll;");
+            writer.WriteLine("ref C:\\Program Files (x86)\\Reference Assemblies\\Microsoft\\Framework\\.NETFramework\\v4.6\\System.Net.Http.dll;");
             writer.WriteLine();
 
             var xmlText = text.Substring(openTagIndex, endOfMetadata);
