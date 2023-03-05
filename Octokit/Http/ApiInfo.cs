@@ -28,30 +28,34 @@ namespace Octokit
             ServerTimeDifference = serverTimeDifference;
         }
 
+        public ApiInfo()
+        {
+        }
+
         /// <summary>
         /// Oauth scopes that were included in the token used to make the request.
         /// </summary>
-        public IReadOnlyList<string> OauthScopes { get; private set; }
+        public IReadOnlyList<string> OauthScopes { get; set; }
 
         /// <summary>
         /// Oauth scopes accepted for this particular call.
         /// </summary>
-        public IReadOnlyList<string> AcceptedOauthScopes { get; private set; }
+        public IReadOnlyList<string> AcceptedOauthScopes { get; set; }
 
         /// <summary>
         /// Etag
         /// </summary>
-        public string Etag { get; private set; }
+        public string Etag { get; set; }
 
         /// <summary>
         /// Links to things like next/previous pages
         /// </summary>
-        public IReadOnlyDictionary<string, Uri> Links { get; private set; }
+        public IReadOnlyDictionary<string, Uri> Links { get; set; }
 
         /// <summary>
         /// Information about the API rate limit
         /// </summary>
-        public RateLimit RateLimit { get; private set; }
+        public RateLimit RateLimit { get; set; }
 
         /// <summary>
         /// The best-effort time difference between the server and the client.
