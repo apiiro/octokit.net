@@ -25,6 +25,26 @@ public class SearchClientTests
     }
 
     [IntegrationTest]
+    public async Task SearchForSingleTopic()
+    {
+        var request = new SearchRepositoriesRequest { Topic = "csharp" };
+
+        var repos = await _gitHubClient.Search.SearchRepo(request);
+
+        Assert.NotEmpty(repos.Items);
+    }
+
+    [IntegrationTest]
+    public async Task SearchForMoreThan2Topics()
+    {
+        var request = new SearchRepositoriesRequest { Topics = Octokit.Range.GreaterThanOrEquals(2) };
+
+        var repos = await _gitHubClient.Search.SearchRepo(request);
+
+        Assert.NotEmpty(repos.Items);
+    }
+
+    [IntegrationTest]
     public async Task SearchForCSharpRepositoriesUpdatedIn2020()
     {
         var request = new SearchRepositoriesRequest("csharp")
@@ -82,9 +102,10 @@ public class SearchClientTests
     [IntegrationTest]
     public async Task SearchForFilesInOrganization()
     {
+        var orgs = new[] { "octokit", "github" };
         var request = new SearchCodeRequest()
         {
-            Organization = "octokit",
+            Organizations = orgs,
             FileName = "readme.md"
         };
 
@@ -92,7 +113,25 @@ public class SearchClientTests
 
         foreach (var searchResult in searchResults.Items)
         {
-            Assert.Equal("octokit", searchResult.Repository.Owner.Login);
+            Assert.Contains(searchResult.Repository.Owner.Login, orgs);
+        }
+    }
+
+    [IntegrationTest]
+    public async Task SearchForFilesInUsers()
+    {
+        var users = new[] { "octokit", "github" };
+        var request = new SearchCodeRequest()
+        {
+            Users = users,
+            FileName = "readme.md"
+        };
+
+        var searchResults = await _gitHubClient.Search.SearchCode(request);
+
+        foreach (var searchResult in searchResults.Items)
+        {
+            Assert.Contains(searchResult.Repository.Owner.Login, users);
         }
     }
 
@@ -240,6 +279,28 @@ public class SearchClientTests
 
         Assert.NotEmpty(closedIssues);
         Assert.NotEmpty(openedIssues);
+    }
+
+    [IntegrationTest]
+    public async Task SearchForLockedUnlockedIssues()
+    {
+
+        var lockedIssuesRequest = new SearchIssuesRequest();
+        lockedIssuesRequest.Repos.Add("octokit", "octokit.net");
+        lockedIssuesRequest.Is = new List<IssueIsQualifier> { IssueIsQualifier.Issue, IssueIsQualifier.Locked };
+
+        var lockedIssues = await _gitHubClient.Search.SearchIssues(lockedIssuesRequest);
+
+        var unlockedIssuesRequest = new SearchIssuesRequest();
+
+        unlockedIssuesRequest.Repos.Add("octokit", "octokit.net");
+        unlockedIssuesRequest.Is = new List<IssueIsQualifier> { IssueIsQualifier.Issue, IssueIsQualifier.Unlocked };
+
+
+        var unlockedIssues = await _gitHubClient.Search.SearchIssues(unlockedIssuesRequest);
+
+        Assert.All(lockedIssues.Items, i => Assert.True(i.Locked));
+        Assert.All(unlockedIssues.Items, i => Assert.False(i.Locked));
     }
 
     [IntegrationTest]
@@ -601,7 +662,7 @@ public class SearchClientTests
     [IntegrationTest]
     public async Task SearchForExcludedBase()
     {
-        var branch = "master";
+        var branch = "main";
 
         // Search for issues by target branch
         var request = new SearchIssuesRequest();

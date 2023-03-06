@@ -317,8 +317,7 @@ namespace Octokit.Tests.Clients
 
                 await client.GetSha1("fake", "repo", "ref");
 
-                connection.Received().Get<string>(Arg.Is<Uri>(u => u.ToString() == "repos/fake/repo/commits/ref"),
-                    null, "application/vnd.github.v3.sha");
+                connection.Received().Get<string>(Arg.Is<Uri>(u => u.ToString() == "repos/fake/repo/commits/ref"), null);
             }
 
             [Fact]
@@ -329,8 +328,7 @@ namespace Octokit.Tests.Clients
 
                 await client.GetSha1(1, "ref");
 
-                connection.Received().Get<string>(Arg.Is<Uri>(u => u.ToString() == "repositories/1/commits/ref"),
-                    null, "application/vnd.github.v3.sha");
+                connection.Received().Get<string>(Arg.Is<Uri>(u => u.ToString() == "repositories/1/commits/ref"), null);
             }
 
             [Fact]
@@ -350,6 +348,64 @@ namespace Octokit.Tests.Clients
                 await Assert.ThrowsAsync<ArgumentException>(() => client.GetSha1("owner", "name", ""));
 
                 await Assert.ThrowsAsync<ArgumentException>(() => client.GetSha1(1, ""));
+            }
+        }
+
+        public class ThePullRequestsMethod
+        {
+            [Fact]
+            public async Task RequestsCorrectUrl()
+            {
+                var connection = Substitute.For<IApiConnection>();
+                var client = new RepositoryCommitsClient(connection);
+                var options = new ApiOptions
+                {
+                    PageCount = 1,
+                    StartPage = 1,
+                    PageSize = 1
+                };
+
+                await client.PullRequests("fake", "repo", "ref", options);
+
+                connection.Received().GetAll<CommitPullRequest>(Arg.Is<Uri>(u => u.ToString() == "repos/fake/repo/commits/ref/pulls"),
+                    null, options);
+            }
+
+            [Fact]
+            public async Task RequestsCorrectUrlWithRepositoryId()
+            {
+                var connection = Substitute.For<IApiConnection>();
+                var client = new RepositoryCommitsClient(connection);
+                var options = new ApiOptions
+                {
+                    PageCount = 1,
+                    StartPage = 1,
+                    PageSize = 1
+                };
+
+                await client.PullRequests(1, "ref", options);
+
+                connection.Received().GetAll<CommitPullRequest>(Arg.Is<Uri>(u => u.ToString() == "repositories/1/commits/ref/pulls"),
+                    null, options);
+            }
+
+            [Fact]
+            public async Task EnsuresNonNullArguments()
+            {
+                var connection = Substitute.For<IApiConnection>();
+                var client = new RepositoryCommitsClient(connection);
+
+                await Assert.ThrowsAsync<ArgumentNullException>(() => client.PullRequests(null, "name", "ref"));
+                await Assert.ThrowsAsync<ArgumentNullException>(() => client.PullRequests("owner", null, "ref"));
+                await Assert.ThrowsAsync<ArgumentNullException>(() => client.PullRequests("owner", "name", null));
+
+                await Assert.ThrowsAsync<ArgumentNullException>(() => client.PullRequests(1, null));
+
+                await Assert.ThrowsAsync<ArgumentException>(() => client.PullRequests("", "name", "ref"));
+                await Assert.ThrowsAsync<ArgumentException>(() => client.PullRequests("owner", "", "ref"));
+                await Assert.ThrowsAsync<ArgumentException>(() => client.PullRequests("owner", "name", ""));
+
+                await Assert.ThrowsAsync<ArgumentException>(() => client.PullRequests(1, ""));
             }
         }
     }

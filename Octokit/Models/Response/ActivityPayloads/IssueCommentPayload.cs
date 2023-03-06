@@ -3,10 +3,11 @@
 namespace Octokit
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class IssueCommentPayload : ActivityWithActionPayload
+    public class IssueCommentPayload : ActivityPayload
     {
         // should always be "created" according to github api docs
-        public Issue Issue { get; protected set; }
-        public IssueComment Comment { get; protected set; }
+        public string Action { get; private set; }
+        public Issue Issue { get; private set; }
+        public IssueComment Comment { get; private set; }
     }
 }

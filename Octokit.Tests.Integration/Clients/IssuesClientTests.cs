@@ -214,6 +214,46 @@ public class IssuesClientTests : IDisposable
     }
 
     [IntegrationTest]
+    public async Task CanCreateCloseAndReopenIssue()
+    {
+        var newIssue = new NewIssue("a test issue") { Body = "A new unassigned issue" };
+        newIssue.Labels.Add("test");
+        newIssue.Assignees.Add(_context.RepositoryOwner);
+
+        var issue = await _issuesClient.Create(_context.RepositoryOwner, _context.RepositoryName, newIssue);
+        Assert.NotNull(issue);
+        Assert.True(issue.Assignees.All(x => x.Login == _context.RepositoryOwner));
+
+        var retrieved = await _issuesClient.Get(_context.RepositoryOwner, _context.RepositoryName, issue.Number);
+        Assert.NotNull(retrieved);
+        Assert.True(retrieved.Assignees.Count == 1);
+        Assert.True(retrieved.Assignees[0].Login == _context.RepositoryOwner);
+
+        var update = retrieved.ToUpdate();
+        update.State = ItemState.Closed;
+        update.StateReason = ItemStateReason.NotPlanned;
+
+        var closed = await _issuesClient.Update(_context.RepositoryOwner, _context.RepositoryName, issue.Number, update);
+        Assert.NotNull(closed);
+        Assert.Equal(ItemState.Closed, closed.State);
+        Assert.Equal(ItemStateReason.NotPlanned, closed.StateReason);
+
+        retrieved = await _issuesClient.Get(_context.RepositoryOwner, _context.RepositoryName, issue.Number);
+        Assert.NotNull(retrieved);
+        Assert.Equal(ItemState.Closed, retrieved.State);
+        Assert.Equal(ItemStateReason.NotPlanned, retrieved.StateReason);
+
+        update = retrieved.ToUpdate();
+        update.State = ItemState.Open;
+        update.StateReason = ItemStateReason.Reopened;
+
+        var reopened = await _issuesClient.Update(_context.RepositoryOwner, _context.RepositoryName, issue.Number, update);
+        Assert.NotNull(reopened);
+        Assert.Equal(ItemState.Open, reopened.State);
+        Assert.Equal(ItemStateReason.Reopened, reopened.StateReason);
+    }
+
+    [IntegrationTest]
     public async Task CanCreateRetrieveAndCloseIssueWithRepositoryId()
     {
         var newIssue = new NewIssue("a test issue") { Body = "A new unassigned issue" };
@@ -241,15 +281,29 @@ public class IssuesClientTests : IDisposable
         var issue = await _issuesClient.Create(_context.RepositoryOwner, _context.RepositoryName, newIssue);
         Assert.False(issue.Locked);
 
-        await _issuesClient.Lock(_context.RepositoryOwner, _context.RepositoryName, issue.Number);
+        await _issuesClient.LockUnlock.Lock(_context.RepositoryOwner, _context.RepositoryName, issue.Number);
         var retrieved = await _issuesClient.Get(_context.RepositoryOwner, _context.RepositoryName, issue.Number);
         Assert.NotNull(retrieved);
         Assert.True(retrieved.Locked);
 
-        await _issuesClient.Unlock(_context.RepositoryOwner, _context.RepositoryName, issue.Number);
+        await _issuesClient.LockUnlock.Unlock(_context.RepositoryOwner, _context.RepositoryName, issue.Number);
         retrieved = await _issuesClient.Get(_context.RepositoryOwner, _context.RepositoryName, issue.Number);
         Assert.NotNull(retrieved);
         Assert.False(retrieved.Locked);
+    }
+
+    [IntegrationTest]
+    public async Task CanAccessActiveLockReason()
+    {
+        var newIssue = new NewIssue("a test issue") { Body = "A new unassigned issue" };
+        var issue = await _issuesClient.Create(_context.RepositoryOwner, _context.RepositoryName, newIssue);
+        Assert.False(issue.Locked);
+
+        await _issuesClient.LockUnlock.Lock(_context.RepositoryOwner, _context.RepositoryName, issue.Number, LockReason.OffTopic);
+        var retrieved = await _issuesClient.Get(_context.RepositoryOwner, _context.RepositoryName, issue.Number);
+        Assert.NotNull(retrieved);
+        Assert.True(retrieved.Locked);
+        Assert.Equal(retrieved.ActiveLockReason, LockReason.OffTopic);
     }
 
     [IntegrationTest]
@@ -259,12 +313,12 @@ public class IssuesClientTests : IDisposable
         var issue = await _issuesClient.Create(_context.Repository.Id, newIssue);
         Assert.False(issue.Locked);
 
-        await _issuesClient.Lock(_context.Repository.Id, issue.Number);
+        await _issuesClient.LockUnlock.Lock(_context.Repository.Id, issue.Number);
         var retrieved = await _issuesClient.Get(_context.Repository.Id, issue.Number);
         Assert.NotNull(retrieved);
         Assert.True(retrieved.Locked);
 
-        await _issuesClient.Unlock(_context.Repository.Id, issue.Number);
+        await _issuesClient.LockUnlock.Unlock(_context.Repository.Id, issue.Number);
         retrieved = await _issuesClient.Get(_context.Repository.Id, issue.Number);
         Assert.NotNull(retrieved);
         Assert.False(retrieved.Locked);
@@ -1288,7 +1342,7 @@ public class IssuesClientTests : IDisposable
     [IntegrationTest]
     public async Task CanGetReactionPayload()
     {
-        using (var context = await _github.CreateRepositoryContext(Helper.MakeNameWithTimestamp("IssuesReactionTests")))
+        using (var context = await _github.CreateRepositoryContextWithAutoInit(Helper.MakeNameWithTimestamp("IssuesReactionTests")))
         {
             // Create a test issue with reactions
             var issueNumber = await HelperCreateIssue(context.RepositoryOwner, context.RepositoryName);
@@ -1312,7 +1366,7 @@ public class IssuesClientTests : IDisposable
     public async Task CanGetReactionPayloadForMultipleIssues()
     {
         var numberToCreate = 2;
-        using (var context = await _github.CreateRepositoryContext(Helper.MakeNameWithTimestamp("IssuesReactionTests")))
+        using (var context = await _github.CreateRepositoryContextWithAutoInit(Helper.MakeNameWithTimestamp("IssuesReactionTests")))
         {
             var issueNumbers = new List<int>();
 

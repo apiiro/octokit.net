@@ -40,7 +40,7 @@ public class InstallationTest
     ""checks"": ""write"",
     ""metadata"": ""read"",
     ""contents"": ""read"",
-    ""secret_scanning_alert"": ""write""
+    ""secret_scanning_alerts"": ""write""
   },
   ""events"": [
     ""push"",
@@ -64,6 +64,6 @@ public class InstallationTest
         var installation = serializer.Deserialize<Installation>(json);
 
         Assert.Equal(1, installation.Id);
-        Assert.Equal(InstallationPermissionLevel.Write, installation.Permissions.SecretScanningAlert);
+        Assert.Equal(InstallationPermissionLevel.Write, installation.Permissions.SecretScanningAlerts);
     }
 }

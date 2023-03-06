@@ -61,6 +61,14 @@ request.Involves = "terrajobst";
 request.State = ItemState.All;
 // or to just search closed issues
 request.State = ItemState.Closed;
+
+// you can filter by the "Is" qualifier
+// the enum IssueIsQualifier contains the supported values
+// you can filter for locked issues like this:
+request.Is = new List<IssueIsQualifier> {
+  IssueIsQualifier.Issue,
+  IssueIsQualifier.Locked
+};
 ```
 
 There's other options available to control how the results are returned:
@@ -198,10 +206,10 @@ var request = new SearchCodeRequest("auth")
 {
     // we can restrict search to the file, path or search both
     In = new[] { CodeInQualifier.File, CodeInQualifier.Path },
-    
+
     // how about we find a file based on a certain language
     Language = Language.JavaScript,
-    
+
     // do we want to search forks too?
     Forks = true,
 
@@ -210,15 +218,16 @@ var request = new SearchCodeRequest("auth")
 
     // we may want to restrict the search to the path of a file
     Path = "app/assets",
-    
+
     // we may want to restrict the file based on file extension
     Extensions = new[] { "json", "sql" },
-    
+
     // restrict search to a specific file name
     FileName = "app.json",
-    
+
     // search within a users or orgs repo
-    User = "dhh"
+    Users = new[] { "johnDoe", "janeDoe" }
+    Organizations = new[] { "johnDoe", "janeDoe" }
 };
 ```
 

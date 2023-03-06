@@ -1,4 +1,5 @@
 ﻿using System;
+using Octokit.Caching;
 using Octokit.Internal;
 
 namespace Octokit
@@ -111,10 +112,18 @@ namespace Octokit
             User = new UsersClient(apiConnection);
             Reaction = new ReactionsClient(apiConnection);
             Check = new ChecksClient(apiConnection);
+            Packages = new PackagesClient(apiConnection);
+            Emojis = new EmojisClient(apiConnection);
+            Markdown = new MarkdownClient(apiConnection);
+            GitIgnore = new GitIgnoreClient(apiConnection);
+            Licenses = new LicensesClient(apiConnection);
+            RateLimit = new RateLimitClient(apiConnection);
+            Meta = new MetaClient(apiConnection);
+            Actions = new ActionsClient(apiConnection);
         }
 
         /// <summary>
-        /// Set the GitHub Api request timeout.
+        /// Sets the timeout for the connection between the client and the server.
         /// Useful to set a specific timeout for lengthy operations, such as uploading release assets
         /// </summary>
         /// <remarks>
@@ -156,6 +165,21 @@ namespace Octokit
         }
 
         /// <summary>
+        /// Convenience property for setting response cache.
+        /// </summary>
+        /// <remarks>
+        /// Setting this property will wrap existing <see cref="IHttpClient"/> in <see cref="CachingHttpClient"/>.
+        /// </remarks>
+        public IResponseCache ResponseCache
+        {
+            set
+            {
+                Ensure.ArgumentNotNull(value, nameof(value));
+                Connection.ResponseCache = value;
+            }
+        }
+
+        /// <summary>
         /// The base address of the GitHub API. This defaults to https://api.github.com,
         /// but you can change it if needed (to talk to a GitHub:Enterprise server for instance).
         /// </summary>
@@ -184,6 +208,14 @@ namespace Octokit
         /// Refer to the API documentation for more information: https://developer.github.com/v3/activity/
         /// </remarks>
         public IActivitiesClient Activity { get; private set; }
+
+        /// <summary>
+        /// Access GitHub's Emojis API.
+        /// </summary>
+        /// <remarks>
+        /// Refer to the API documentation for more information: https://docs.github.com/rest/emojis
+        /// </remarks>
+        public IEmojisClient Emojis { get; private set; }
 
         /// <summary>
         /// Access GitHub's Issue API.
@@ -224,6 +256,14 @@ namespace Octokit
         /// Refer to the API documentation for more information: https://developer.github.com/v3/orgs/
         /// </remarks>
         public IOrganizationsClient Organization { get; private set; }
+
+        /// <summary>
+        /// Access GitHub's Pacakges API.
+        /// </summary>
+        /// <remarks>
+        /// Refer to the API documentation for more information: https://docs.github.com/rest/packages
+        /// </remarks>
+        public IPackagesClient Packages { get; private set; }
 
         /// <summary>
         /// Access GitHub's Pull Requests API.
@@ -304,6 +344,54 @@ namespace Octokit
         /// Refer to the API documentation for more information: https://developer.github.com/v3/checks/
         /// </remarks>
         public IChecksClient Check { get; private set; }
+
+        /// <summary>
+        /// Access GitHub's Meta API.
+        /// </summary>
+        /// <remarks>
+        /// Refer to the API documentation for more information: https://docs.github.com/rest/meta
+        /// </remarks>
+        public IMetaClient Meta { get; private set; }
+
+        /// <summary>
+        /// Access GitHub's Rate Limit API
+        /// </summary>
+        /// <remarks>
+        /// Refer to the API documentation for more information: https://docs.github.com/rest/rate-limit
+        /// </remarks>
+        public IRateLimitClient RateLimit { get; private set; }
+
+        /// <summary>
+        /// Access GitHub's Licenses API
+        /// </summary>
+        /// <remarks>
+        /// Refer to the API documentation for more information: https://docs.github.com/rest/licenses
+        /// </remarks>
+        public ILicensesClient Licenses { get; private set; }
+
+        /// <summary>
+        /// Access GitHub's Git Ignore API
+        /// </summary>
+        /// <remarks>
+        /// Refer to the API documentation for more information: https://docs.github.com/rest/gitignore
+        /// </remarks>
+        public IGitIgnoreClient GitIgnore { get; private set; }
+
+        /// <summary>
+        /// Access GitHub's Markdown API
+        /// </summary>
+        /// <remarks>
+        /// Refer to the API documentation for more information: https://docs.github.com/rest/markdown
+        /// </remarks>
+        public IMarkdownClient Markdown { get; private set; }
+
+        /// <summary>
+        /// Access GitHub's Actions API
+        /// </summary>
+        /// <remarks>
+        /// Refer to the API documentation for more information: https://developer.github.com/v3/actions/
+        /// </remarks>
+        public IActionsClient Actions { get; private set; }
 
         static Uri FixUpBaseUri(Uri uri)
         {
