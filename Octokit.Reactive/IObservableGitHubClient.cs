@@ -42,5 +42,6 @@ namespace Octokit.Reactive
         IObservableRateLimitClient RateLimit { get; }
         IObservableMetaClient Meta { get; }
         IObservableActionsClient Actions { get; }
+        IObservableAuditLogClient AuditLog { get; }
     }
 }
