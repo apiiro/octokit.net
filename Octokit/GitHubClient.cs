@@ -120,6 +120,7 @@ namespace Octokit
             RateLimit = new RateLimitClient(apiConnection);
             Meta = new MetaClient(apiConnection);
             Actions = new ActionsClient(apiConnection);
+            AuditLog = new AuditLogClient(apiConnection);
         }
 
         /// <summary>
@@ -208,6 +209,15 @@ namespace Octokit
         /// Refer to the API documentation for more information: https://developer.github.com/v3/activity/
         /// </remarks>
         public IActivitiesClient Activity { get; private set; }
+        
+        /// <summary>
+        /// Access GitHub's Audit Log API.
+        /// </summary>
+        /// <remarks>
+        /// Refer to the API documentation for more information: https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/using-the-audit-log-api-for-your-enterprise
+        /// </remarks>
+        public IAuditLogClient AuditLog { get; private set; }
+
 
         /// <summary>
         /// Access GitHub's Emojis API.
