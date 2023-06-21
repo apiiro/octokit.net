@@ -1,5 +1,4 @@
 using System;
-using System.Reactive;
 
 namespace Octokit.Reactive;
 

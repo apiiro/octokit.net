@@ -1,5 +1,4 @@
 using System;
-using System.Reactive;
 using System.Reactive.Threading.Tasks;
 
 namespace Octokit.Reactive;

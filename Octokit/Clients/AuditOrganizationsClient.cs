@@ -18,6 +18,7 @@ namespace Octokit
         public async Task<DateTime?> GetUserLastActivityDate(string organization, string repository, string user)
         {
             Ensure.ArgumentNotNullOrEmptyString(organization, nameof(organization));
+            Ensure.ArgumentNotNullOrEmptyString(repository, nameof(repository));
             Ensure.ArgumentNotNullOrEmptyString(user, nameof(user));
 
             var options = new ApiOptions()
@@ -25,7 +26,7 @@ namespace Octokit
                 PageCount = 1,
                 PageSize = 1
             };
-            var auditLogs = await ApiConnection.GetAll<AuditLogActivity>(ApiUrls.AuditLog(organization, repository, user), options);
+            var auditLogs = await ApiConnection.GetAll<AuditLogEvent>(ApiUrls.AuditLog(organization, repository, user), options);
             
             if (!auditLogs.Any()) return null;
             
