@@ -215,5 +215,6 @@ namespace Octokit
         /// </remarks>
         ILicensesClient Licenses { get; }
         IEmojisClient Emojis { get; }
+        IAuditLogClient AuditLog { get; }
     }
 }
