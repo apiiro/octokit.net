@@ -5213,13 +5213,11 @@ namespace Octokit
         /// Creates the relative <see cref="Uri"/> for getting the contents of the specified repository and path
         /// </summary>
         /// <param name="organization">The organization</param>
-        /// <param name="user">The user</param>
-        /// <param name="repository">The repository</param>
+        /// <param name="phrase">The query phrase to filter results</param>
         /// <returns>The <see cref="Uri"/> for getting the contents of the specified repository and path</returns>
-        public static Uri AuditLog(string organization, string repository, string user)
+        public static Uri AuditLog(string organization, string phrase)
         {
-            return "organizations/{0}/audit-log?phrase=actor:{1} repo:{2}/{3}"
-                .FormatUri(organization, user, organization, repository);
+            return "organizations/{0}/audit-log?phrase={1}".FormatUri(organization, phrase);
         }
     }
 }

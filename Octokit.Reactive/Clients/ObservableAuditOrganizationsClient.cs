@@ -11,8 +11,8 @@ public class ObservableAuditOrganizationsClient : IObservableAuditOrganizationsC
         _client = client.AuditLog.Organizations;
     }
 
-    public IObservable<DateTime?> GetUserLastActivityDate(string organization, string repository, string user)
+    public IObservable<DateTime?> GetUserLastActivityDate(string organization, AuditLogPhraseOptions phraseOptions)
     {
-        return _client.GetUserLastActivityDate(organization, repository, user).ToObservable();
+        return _client.GetUserLastActivityDate(organization, phraseOptions).ToObservable();
     }
 }
