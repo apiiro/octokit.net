@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,14 +24,19 @@ namespace Octokit
 
             var options = new ApiOptions()
             {
-                PageCount = 1,
                 PageSize = 1
             };
-            var auditLogs = await ApiConnection.GetAll<AuditLogEvent>(ApiUrls.AuditLog(organization, repository, user), options);
-            
-            if (!auditLogs.Any()) return null;
+            IDictionary<string, string> parameters = new Dictionary<string, string>();
+            Pagination.Setup(parameters, options);
+            var auditLogs = await ApiConnection.Get<List<AuditLogEvent>>(ApiUrls.AuditLog(organization, repository, user), parameters);
+
+            if (!auditLogs.Any())
+            {
+                return null;
+            }
             
             var auditLog = auditLogs.Single();
+            if (auditLog == null) return null;
                     
             var dateTimeOffSet = DateTimeOffset.FromUnixTimeMilliseconds(auditLog.CreatedAt);
             var dateTime = dateTimeOffSet.DateTime;
