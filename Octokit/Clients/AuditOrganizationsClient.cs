@@ -15,12 +15,13 @@ namespace Octokit
         {
         }
         
-        [ManualRoute("GET", "/organizations/{org}/audit-log?phrase=actor:{user}+repo:{org}/{repo}")]
-        public async Task<DateTime?> GetUserLastActivityDate(string organization, string repository, string user)
+        [ManualRoute("GET", "/organizations/{org}/audit-log?phrase={phrase}")]
+        public async Task<DateTime?> GetUserLastActivityDate(string organization, AuditLogPhraseOptions auditLogPhraseOptions)
         {
             Ensure.ArgumentNotNullOrEmptyString(organization, nameof(organization));
-            Ensure.ArgumentNotNullOrEmptyString(repository, nameof(repository));
-            Ensure.ArgumentNotNullOrEmptyString(user, nameof(user));
+            Ensure.ArgumentNotNull(auditLogPhraseOptions, nameof(auditLogPhraseOptions));
+            Ensure.ArgumentNotNullOrEmptyString(auditLogPhraseOptions.Repository, nameof(AuditLogPhraseOptions.Repository));
+            Ensure.ArgumentNotNullOrEmptyString(auditLogPhraseOptions.User, nameof(AuditLogPhraseOptions.User));
 
             var options = new ApiOptions()
             {
@@ -28,7 +29,9 @@ namespace Octokit
             };
             IDictionary<string, string> parameters = new Dictionary<string, string>();
             Pagination.Setup(parameters, options);
-            var auditLogs = await ApiConnection.Get<List<AuditLogEvent>>(ApiUrls.AuditLog(organization, repository, user), parameters);
+
+            var phrase = auditLogPhraseOptions.BuildPhrase(organization);
+            var auditLogs = await ApiConnection.Get<List<AuditLogEvent>>(ApiUrls.AuditLog(organization, phrase), parameters);
 
             if (!auditLogs.Any())
             {

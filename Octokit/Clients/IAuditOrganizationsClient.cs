@@ -12,8 +12,7 @@ namespace Octokit
         /// http://developer.github.com/v3/activity/events/#list-issue-events-for-a-repository
         /// </remarks>
         /// <param name="organization">The organization</param>
-        /// <param name="repository">The organization</param>
-        /// <param name="user">The user</param>
-        Task<DateTime?> GetUserLastActivityDate(string organization, string repository, string user);        
+        /// <param name="auditLogPhraseOptions">The query phrase options</param>
+        Task<DateTime?> GetUserLastActivityDate(string organization, AuditLogPhraseOptions auditLogPhraseOptions);        
     }
 }
