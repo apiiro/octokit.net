@@ -4,10 +4,10 @@ using Octokit.Copilot;
 
 namespace Octokit.Reactive;
 
-public class ObservableICopilotClient : IObservableICopilotClient
+public class ObservableCopilotClient : IObservableCopilotClient
 {
     private readonly ICopilotClient _client;
-    public ObservableICopilotClient(IGitHubClient client)
+    public ObservableCopilotClient(IGitHubClient client)
     {
         _client = client.Organization.Copilot;
     }

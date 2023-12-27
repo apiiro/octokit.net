@@ -3,7 +3,7 @@ using Octokit.Copilot;
 
 namespace Octokit.Reactive;
 
-public interface IObservableICopilotClient
+public interface IObservableCopilotClient
 {
     IObservable<CopilotSeatsResponse> GetAllSeats(string org);
 }

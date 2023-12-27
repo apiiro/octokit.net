@@ -23,6 +23,7 @@ namespace Octokit.Reactive
             Hook = new ObservableOrganizationHooksClient(client);
             OutsideCollaborator = new ObservableOrganizationOutsideCollaboratorsClient(client);
             Actions = new ObservableOrganizationActionsClient(client);
+            Copilot = new ObservableCopilotClient(client);
 
             _client = client.Organization;
             _connection = client.Connection;
@@ -53,6 +54,9 @@ namespace Octokit.Reactive
         /// Returns a client to manage organization actions.
         /// </summary>
         public IObservableOrganizationActionsClient Actions { get; private set; }
+
+        
+        public IObservableCopilotClient Copilot { get; }
 
         /// <summary>
         /// Returns the specified organization.
