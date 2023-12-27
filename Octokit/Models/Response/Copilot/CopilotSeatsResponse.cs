@@ -7,10 +7,18 @@ namespace Octokit.Copilot
     /// </summary>
     public class CopilotSeatsResponse
     {
-        public CopilotSeatsResponse() {}
+        public CopilotSeatsResponse()
+        {
+        }
 
-        public int TotalSeats { get; set; }
+        public CopilotSeatsResponse(int totalSeats, IReadOnlyList<CopilotSeat> seats)
+        {
+            TotalSeats = totalSeats;
+            Seats = seats;
+        }
 
-        public IReadOnlyList<CopilotSeat> Seats { get; set; }
+        public int TotalSeats { get; private set;}
+
+        public IReadOnlyList<CopilotSeat> Seats { get; private set;}
     }
 }

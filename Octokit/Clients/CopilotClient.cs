@@ -18,7 +18,7 @@ namespace Octokit
             var results = await ApiConnection.GetAll<CopilotSeatsResponse>(ApiUrls.CopilotSeats(org), ApiOptions.None);
             if (results.Count == 0)
             {
-                return new CopilotSeatsResponse { TotalSeats = 0 };
+                return new CopilotSeatsResponse (0, new List<CopilotSeat>());
             }
 
             var totalSeats = results[0].TotalSeats;
@@ -29,7 +29,7 @@ namespace Octokit
                 seats.AddRange(copilotSeatsResponse.Seats);
             }
 
-            return new CopilotSeatsResponse { TotalSeats = totalSeats, Seats = seats };
+            return new CopilotSeatsResponse (totalSeats, seats);
         }
     }
 }

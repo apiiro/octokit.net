@@ -6,10 +6,17 @@ namespace Octokit.Copilot
     {
         public CopilotSeat() {}
 
-        public DateTime CreatedAt { get; set; }
-        
-        public DateTime UpdatedAt { get; set; }
+        public CopilotSeat(DateTime createdAt, DateTime updatedAt, User assignee)
+        {
+            CreatedAt = createdAt;
+            UpdatedAt = updatedAt;
+            Assignee = assignee;
+        }
 
-        public User Assignee { get; set; }
+        public DateTime CreatedAt { get; private set; }
+        
+        public DateTime UpdatedAt { get; private set; }
+
+        public User Assignee { get; private set; }
     }
 }
