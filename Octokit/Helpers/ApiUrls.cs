@@ -5219,5 +5219,15 @@ namespace Octokit
         {
             return "organizations/{0}/audit-log?phrase={1}".FormatUri(organization, phrase);
         }
+        
+        /// <summary>
+        /// Returns the <see cref="Uri"/> that returns all of the copilot seats of the organization
+        /// </summary>
+        /// <param name="org">The organization</param>
+        /// <returns></returns>
+        public static Uri CopilotSeats(string org)
+        {
+            return "orgs/{0}/copilot/billing/seats".FormatUri(org);
+        }
     }
 }

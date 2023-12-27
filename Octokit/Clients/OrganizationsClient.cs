@@ -23,6 +23,7 @@ namespace Octokit
             Hook = new OrganizationHooksClient(apiConnection);
             OutsideCollaborator = new OrganizationOutsideCollaboratorsClient(apiConnection);
             Actions = new OrganizationActionsClient(apiConnection);
+            Copilot = new CopilotClient(apiConnection);
         }
 
         /// <summary>
@@ -39,6 +40,8 @@ namespace Octokit
         /// Returns a client to manage organization actions.
         /// </summary>
         public IOrganizationActionsClient Actions { get; private set; }
+
+        public ICopilotClient Copilot { get; }
 
         /// <summary>
         /// Returns a client to manage outside collaborators of an organization.

@@ -39,6 +39,11 @@ namespace Octokit
         /// Returns a client to manage organization actions.
         /// </summary>
         IOrganizationActionsClient Actions { get; }
+        
+        /// <summary>
+        /// Returns a client to manage organization Copilot seats.
+        /// </summary>
+        ICopilotClient Copilot { get; }
 
         /// <summary>
         /// Returns the specified <see cref="Organization"/>.
