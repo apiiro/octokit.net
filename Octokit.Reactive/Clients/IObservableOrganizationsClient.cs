@@ -30,6 +30,8 @@ namespace Octokit.Reactive
         /// Returns a client to manage organization actions.
         /// </summary>
         IObservableOrganizationActionsClient Actions { get; }
+        
+        IObservableCopilotClient Copilot { get; }
 
         /// <summary>
         /// Returns the specified organization.
