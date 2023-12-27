@@ -10,6 +10,6 @@ namespace Octokit.Copilot
         
         public DateTime UpdatedAt { get; set; }
 
-        public CopilotAssignee Assignee { get; set; }
+        public User Assignee { get; set; }
     }
 }
