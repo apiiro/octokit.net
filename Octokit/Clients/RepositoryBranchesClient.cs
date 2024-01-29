@@ -123,6 +123,25 @@ namespace Octokit
         }
 
         /// <summary>
+        /// Get the branch rules for the specified branch
+        /// </summary>
+        /// <remarks>
+        /// See the <a href="https://docs.github.com/en/rest/repos/rules#get-rules-for-a-branch">API documentation</a> for more details
+        /// </remarks>
+        /// <param name="owner">The owner of the repository</param>
+        /// <param name="name">The name of the repository</param>
+        /// <param name="branch">The name of the branch</param>
+        [ManualRoute("GET", "/repos/{owner}/{repo}/rules/branches/{branch}")]
+        public Task<List<BranchProtectionRule>> GetBranchRules(string owner, string name, string branch)
+        {
+            Ensure.ArgumentNotNullOrEmptyString(owner, nameof(owner));
+            Ensure.ArgumentNotNullOrEmptyString(name, nameof(name));
+            Ensure.ArgumentNotNullOrEmptyString(branch, nameof(branch));
+
+            return ApiConnection.Get<List<BranchProtectionRule>>(ApiUrls.RepoBranchRules(owner, name, branch), null);
+        }
+
+        /// <summary>
         /// Get the branch protection settings for the specified branch
         /// </summary>
         /// <remarks>
