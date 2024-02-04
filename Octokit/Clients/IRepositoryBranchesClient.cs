@@ -76,6 +76,17 @@ namespace Octokit
         /// <param name="branch">The name of the branch</param>
         [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Get")]
         Task<Branch> Get(long repositoryId, string branch);
+        
+        /// <summary>
+        /// Get the branch rules for the specified branch
+        /// </summary>
+        /// <remarks>
+        /// See the <a href="https://docs.github.com/en/rest/repos/rules#get-rules-for-a-branch">API documentation</a> for more details
+        /// </remarks>
+        /// <param name="owner">The owner of the repository</param>
+        /// <param name="name">The name of the repository</param>
+        /// <param name="branch">The name of the branch</param>
+        Task<List<BranchProtectionRule>> GetBranchRules(string owner, string name, string branch);
 
         /// <summary>
         /// Get the branch protection settings for the specified branch
