@@ -10,7 +10,6 @@
 
 To push to apiiro nuget package:
 
-צשלקשדגגש
 before running the following cmds make sure that `bin/Release/Apiiro.Octokit.*.nupkg` contains only the package that you want to push.
 
 ```bash
