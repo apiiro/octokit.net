@@ -45,15 +45,18 @@ namespace Octokit
         {
         }
 
-        public BranchProtectionRuleParameters(int requiredApprovingReviewCount)
+        public BranchProtectionRuleParameters(int requiredApprovingReviewCount, bool requireLastPushApproval)
         {
             RequiredApprovingReviewCount = requiredApprovingReviewCount;
+            RequireLastPushApproval = requireLastPushApproval;
         }
 
         public int RequiredApprovingReviewCount { get; private set; }
 
+        public bool RequireLastPushApproval { get; private set; }
+
         internal string DebuggerDisplay =>
             string.Format(CultureInfo.InvariantCulture,
-                "RequiredApprovingReviewCount: {0}", RequiredApprovingReviewCount);
+                "RequiredApprovingReviewCount: {0}, RequireLastPushApproval: {1}", RequiredApprovingReviewCount, RequireLastPushApproval);
     }
 }
