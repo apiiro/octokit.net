@@ -57,6 +57,8 @@ namespace Octokit
 
         internal string DebuggerDisplay =>
             string.Format(CultureInfo.InvariantCulture,
-                "RequiredApprovingReviewCount: {0}, RequireLastPushApproval: {1}", RequiredApprovingReviewCount, RequireLastPushApproval);
+                "RequiredApprovingReviewCount: {0} RequireLastPushApproval: {1}",
+                RequiredApprovingReviewCount,
+                RequireLastPushApproval);
     }
 }
