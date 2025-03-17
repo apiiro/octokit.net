@@ -207,12 +207,13 @@ namespace Octokit
     {
         public BranchProtectionRequiredReviews() { }
 
-        public BranchProtectionRequiredReviews(BranchProtectionRequiredReviewsDismissalRestrictions dismissalRestrictions, bool dismissStaleReviews, bool requireCodeOwnerReviews, int requiredApprovingReviewCount)
+        public BranchProtectionRequiredReviews(BranchProtectionRequiredReviewsDismissalRestrictions dismissalRestrictions, bool dismissStaleReviews, bool requireCodeOwnerReviews, int requiredApprovingReviewCount, bool requireLastPushApproval)
         {
             DismissalRestrictions = dismissalRestrictions;
             DismissStaleReviews = dismissStaleReviews;
             RequireCodeOwnerReviews = requireCodeOwnerReviews;
             RequiredApprovingReviewCount = requiredApprovingReviewCount;
+            RequireLastPushApproval = requireLastPushApproval;
         }
 
         /// <summary>
@@ -234,16 +235,19 @@ namespace Octokit
         /// Specify the number of reviewers required to approve pull requests. Use a number between 1 and 6.
         /// </summary>
         public int RequiredApprovingReviewCount { get; private set; }
+        
+        public bool RequireLastPushApproval { get; private set; }
 
         internal string DebuggerDisplay
         {
             get
             {
-                return string.Format(CultureInfo.InvariantCulture, "DismissalRestrictions: {0} DismissStaleReviews: {1} RequireCodeOwnerReviews: {2} RequiredApprovingReviewCount: {3}",
+                return string.Format(CultureInfo.InvariantCulture, "DismissalRestrictions: {0} DismissStaleReviews: {1} RequireCodeOwnerReviews: {2} RequiredApprovingReviewCount: {3} RequireLastPushApproval: {4}",
                     DismissalRestrictions?.DebuggerDisplay ?? "disabled",
                     DismissStaleReviews,
                     RequireCodeOwnerReviews,
-                    RequiredApprovingReviewCount);
+                    RequiredApprovingReviewCount,
+                    RequireLastPushApproval);
             }
         }
     }
