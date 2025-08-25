@@ -9,7 +9,7 @@ namespace Octokit
         public string Repository { get; set; }
         public DateTime? Created { get; set; }
 
-        public string BuildPhrase(string organization)
+        public string BuildPhrase(string organization, string action = null)
         {
             var sb = new StringBuilder();
             if (!string.IsNullOrWhiteSpace(User))
@@ -20,6 +20,11 @@ namespace Octokit
             if (!string.IsNullOrWhiteSpace(Repository))
             {
                 sb.Append($"repo:{organization}/{Repository} ");
+            }
+
+            if (!string.IsNullOrWhiteSpace(action))
+            {
+                sb.Append($"action:{action} ");
             }
 
             if (Created.HasValue)
