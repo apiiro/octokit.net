@@ -78,7 +78,8 @@ namespace Octokit
 
             var dateTimeOffSet = DateTimeOffset.FromUnixTimeMilliseconds(auditLog.CreatedAt);
             var created = dateTimeOffSet.DateTime;
-            var user = auditLog.Actor;
+            var actor = auditLog.Actor;
+            var actorId = auditLog.ActorId;
 
             if (auditLog.Data is not JsonObject visibilityChangeData)
             {
@@ -88,14 +89,12 @@ namespace Octokit
             var fromVisibility = GetVisibilityChange(visibilityChangeData, "previous_visibility");
             var toVisibility = GetVisibilityChange(visibilityChangeData, "visibility");
 
-            if (fromVisibility == null ||
-                fromVisibility == RepositoryVisibility.Public ||
-                toVisibility is not RepositoryVisibility.Public)
+            if (fromVisibility == null || toVisibility == null)
             {
                 return null;
             }
 
-            return new RepositoryVisibilityChange(user, created, fromVisibility.Value, toVisibility.Value);
+            return new RepositoryVisibilityChange(actor, actorId, created, fromVisibility.Value, toVisibility.Value);
 
             RepositoryVisibility? GetVisibilityChange(JsonObject visibilityChangeDataJsonObject, string visibilityKey)
             {

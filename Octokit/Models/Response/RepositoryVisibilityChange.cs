@@ -9,15 +9,17 @@ namespace Octokit
     {
         public RepositoryVisibilityChange() { }
 
-        public RepositoryVisibilityChange(string user, DateTime created, RepositoryVisibility fromVisibility, RepositoryVisibility toVisibility)
+        public RepositoryVisibilityChange(string actor, long? actorId, DateTime created, RepositoryVisibility fromVisibility, RepositoryVisibility toVisibility)
         {
-            User = user;
+            Actor = actor;
+            ActorId = actorId;
             Created = created;
             FromVisibility = fromVisibility;
             ToVisibility = toVisibility;
         }
         
-        public string User { get; private set; }
+        public string Actor { get; private set; }
+        public long? ActorId { get; private set; }
         public DateTime Created { get; private set; }
         public RepositoryVisibility FromVisibility { get; private set; }
         public RepositoryVisibility ToVisibility { get; private set; }
@@ -27,7 +29,8 @@ namespace Octokit
             get
             {
                 return string.Format(CultureInfo.InvariantCulture,
-                    "User: {0}, Created: {1}, FromVisibility: {2}, ToVisibility:{3}", User, Created, FromVisibility, ToVisibility);
+                    "Actor: {0}, ActorId: {2}, Created: {3}, FromVisibility: {4}, ToVisibility:{5}", 
+                    Actor, ActorId, Created, FromVisibility, ToVisibility);
             }
         }
     }
