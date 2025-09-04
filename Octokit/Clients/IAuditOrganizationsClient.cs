@@ -17,13 +17,23 @@ namespace Octokit
         Task<DateTime?> GetUserLastActivityDate(string organization, AuditLogPhraseOptions auditLogPhraseOptions);
         
         /// <summary>
-        /// Gets all the events for a given repository
+        /// Gets last visibility change event for a given repository
         /// </summary>
         /// <remarks>
         /// http://developer.github.com/v3/activity/events/#list-issue-events-for-a-repository
         /// </remarks>
         /// <param name="organization">The organization</param>
         /// <param name="auditLogPhraseOptions">The query phrase options</param>
-        Task<RepositoryVisibilityChange?> GetLastRepositoryVisibilityChange(string organization, AuditLogPhraseOptions auditLogPhraseOptions);
+        Task<RepositoryVisibilityChangeEvent?> GetRepositoryVisibilityChangeLastEvent(string organization, AuditLogPhraseOptions auditLogPhraseOptions);
+
+        /// <summary>
+        /// Gets last visibility change event for a given repository
+        /// </summary>
+        /// <remarks>
+        /// http://developer.github.com/v3/activity/events/#list-issue-events-for-a-repository
+        /// </remarks>
+        /// <param name="organization">The organization</param>
+        /// <param name="auditLogPhraseOptions">The query phrase options</param>
+        Task<ForkRepositoryCreatedEvent?> GetRepositoryCreatedByForkLastEvent(string organization, AuditLogPhraseOptions auditLogPhraseOptions);
     }
 }
