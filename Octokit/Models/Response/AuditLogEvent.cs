@@ -9,7 +9,7 @@ namespace Octokit
     {
         public AuditLogEvent() { }
 
-        public AuditLogEvent(string action, bool? active, bool? activeWas, string actor, long? actorId, string actorIp, object actorLocation,
+        public AuditLogEvent(string action, bool? active, bool? activeWas, string actor, long? actorId, string actorIp, string from, object actorLocation,
             string blockedUser, string business, long? businessId,
             object config, object configWas, string contentType, long createdAt,
             object data, string deployKeyFingerprint, string documentId,
@@ -19,7 +19,7 @@ namespace Octokit
             bool? limitedAvailability,
             string message,
             string name,
-            string oldUser, string opensshPublicKey, string operationType, IReadOnlyList<string> org, IReadOnlyList<long> orgId,
+            string oldUser, string opensshPublicKey, string operationType, string org, long orgId,
             string previousVisibility, bool? publicRepo, long? pullRequestId, string pullRequestTitle, string pullRequestUrl,
             bool? readOnly, string repo, long? repoId, string repository, bool? repositoryPublic,
             string targetLogin, string team, long? transportProtocol, string transportProtocolName, long timestamp, 
@@ -32,6 +32,7 @@ namespace Octokit
             Actor = actor;
             ActorId = actorId;
             ActorIp = actorIp;
+            From = from;
             ActorLocation = actorLocation;
             BlockedUser = blockedUser;
             Business = business;
@@ -85,6 +86,7 @@ namespace Octokit
         public string Actor { get; private set; }
         public long? ActorId { get; private set; }
         public string ActorIp { get; private set; }
+        public string From { get; private set; }
         public object ActorLocation { get; private set; }
         public string BlockedUser { get; private set; }
         public string Business { get; private set; }
@@ -109,8 +111,8 @@ namespace Octokit
         public string OldUser { get; private set; }
         public string OpensshPublicKey { get; private set; }
         public string OperationType { get; private set; }
-        public IReadOnlyList<string> Org { get; private set; }
-        public IReadOnlyList<long> OrgId { get; private set; }
+        public string Org { get; private set; }
+        public long OrgId { get; private set; }
         public string PreviousVisibility { get; private set; }
         public bool? PublicRepo { get; private set; }
         public long? PullRequestId { get; private set; }
