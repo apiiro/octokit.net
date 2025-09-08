@@ -97,7 +97,7 @@ namespace Octokit
         /// <returns></returns>
         public static Uri OrganizationRepositorySecret(string organization, string secret)
         {
-            return "orgs/{0}/actions/secrets/{1}".FormatUri(organization,secret);
+            return "orgs/{0}/actions/secrets/{1}".FormatUri(organization, secret);
         }
 
         /// <summary>
@@ -423,7 +423,7 @@ namespace Octokit
         /// </summary>
         public static Uri OrganizationInstallation(string organization)
         {
-            return "orgs/{0}/installation".FormatUri(organization); ;
+            return "orgs/{0}/installation".FormatUri(organization);
         }
 
         /// <summary>
@@ -1581,6 +1581,7 @@ namespace Octokit
             {
                 usersReceivedEvents += "/public";
             }
+
             return usersReceivedEvents.FormatUri(user);
         }
 
@@ -1607,6 +1608,7 @@ namespace Octokit
             {
                 usersEvents += "/public";
             }
+
             return usersEvents.FormatUri(user);
         }
 
@@ -1780,7 +1782,6 @@ namespace Octokit
             return "repositories/{0}/pulls/comments/{1}/reactions".FormatUri(repositoryId, number);
         }
 
-
         /// <summary>
         /// Returns the <see cref="Uri"/> for the reaction of a specified pull request review comment.
         /// </summary>
@@ -1842,6 +1843,7 @@ namespace Octokit
             {
                 blob += "/{2}";
             }
+
             return blob.FormatUri(owner, name, reference);
         }
 
@@ -1931,7 +1933,7 @@ namespace Octokit
         /// <returns></returns>
         public static Uri TeamsByOrganizationAndSlug(string org, string teamSlug)
         {
-            return "orgs/{0}/teams/{1}".FormatUri(org,teamSlug);
+            return "orgs/{0}/teams/{1}".FormatUri(org, teamSlug);
         }
 
         /// <summary>
@@ -2311,7 +2313,7 @@ namespace Octokit
         {
             return "repos/{0}/{1}/branches/{2}".FormatUri(owner, name, branchName);
         }
-        
+
         /// <summary>
         /// Returns the <see cref="Uri"/> for a repository branches rules.
         /// </summary>
@@ -3100,6 +3102,7 @@ namespace Octokit
             {
                 blob += "/{1}";
             }
+
             return blob.FormatUri(repositoryId, reference);
         }
 
@@ -4696,7 +4699,7 @@ namespace Octokit
         {
             return "orgs/{0}/credential-authorizations?login={1}".FormatUri(org, login);
         }
-        
+
         /// <summary>
         /// Returns the <see cref="Uri"/> for the Packages request
         /// </summary>
@@ -5219,8 +5222,7 @@ namespace Octokit
         {
             return "repos/{0}/{1}/actions/workflows/{2}/runs".FormatUri(owner, repo, workflowFileName.UriEncode());
         }
-        
-        
+
         /// <summary>
         /// Creates the relative <see cref="Uri"/> for getting the contents of the specified repository and path
         /// </summary>
@@ -5231,11 +5233,12 @@ namespace Octokit
         {
             if (string.IsNullOrWhiteSpace(phrase))
             {
-                return "organizations/{0}/audit-log".FormatUri(organization);    
+                return "organizations/{0}/audit-log".FormatUri(organization);
             }
+
             return "organizations/{0}/audit-log?phrase={1}".FormatUri(organization, phrase);
         }
-        
+
         /// <summary>
         /// Returns the <see cref="Uri"/> that returns all of the copilot seats of the organization
         /// </summary>
