@@ -16,35 +16,22 @@ namespace Octokit
         {
         }
 
+        [ManualRoute("GET", "/organizations/{org}")]
+        public async Task<DateTime?> GetLastActivityDate(string organization)
+        {
+            Ensure.ArgumentNotNullOrEmptyString(organization, nameof(organization));
+            return await GetLastActivityDateImpl(organization);
+        }
+
         [ManualRoute("GET", "/organizations/{org}/audit-log?phrase={phrase}")]
-        public async Task<DateTime?> GetUserLastActivityDate(string organization, AuditLogPhraseOptions auditLogPhraseOptions)
+        public async Task<DateTime?> GetUserLastActivityForRepositoryDate(string organization, AuditLogPhraseOptions auditLogPhraseOptions)
         {
             Ensure.ArgumentNotNullOrEmptyString(organization, nameof(organization));
             Ensure.ArgumentNotNull(auditLogPhraseOptions, nameof(auditLogPhraseOptions));
             Ensure.ArgumentNotNullOrEmptyString(auditLogPhraseOptions.Repository, nameof(AuditLogPhraseOptions.Repository));
             Ensure.ArgumentNotNullOrEmptyString(auditLogPhraseOptions.User, nameof(AuditLogPhraseOptions.User));
 
-            var options = new ApiOptions()
-            {
-                PageSize = 1
-            };
-            IDictionary<string, string> parameters = new Dictionary<string, string>();
-            Pagination.Setup(parameters, options);
-
-            var phrase = auditLogPhraseOptions.BuildPhrase(organization);
-            var auditLogs = await ApiConnection.Get<List<AuditLogEvent>>(ApiUrls.AuditLog(organization, phrase), parameters);
-
-            if (!auditLogs.Any())
-            {
-                return null;
-            }
-
-            var auditLog = auditLogs.Single();
-
-            var dateTimeOffSet = DateTimeOffset.FromUnixTimeMilliseconds(auditLog.CreatedAt);
-            var dateTime = dateTimeOffSet.DateTime;
-
-            return dateTime;
+            return await GetLastActivityDateImpl(organization, auditLogPhraseOptions);
         }
 
         [ManualRoute("GET", "/organizations/{org}/audit-log?phrase={phrase}")]
@@ -127,6 +114,31 @@ namespace Octokit
             }
 
             return forkRepositoryCreatedEvent;
+        }
+
+        private async Task<DateTime?> GetLastActivityDateImpl(string organization, AuditLogPhraseOptions? auditLogPhraseOptions = null)
+        {
+            var options = new ApiOptions
+            {
+                PageSize = 1
+            };
+            IDictionary<string, string> parameters = new Dictionary<string, string>();
+            Pagination.Setup(parameters, options);
+
+            var phrase = auditLogPhraseOptions?.BuildPhrase(organization);
+            var auditLogs = await ApiConnection.Get<List<AuditLogEvent>>(ApiUrls.AuditLog(organization, phrase), parameters);
+
+            if (!auditLogs.Any())
+            {
+                return null;
+            }
+
+            var auditLog = auditLogs.Single();
+
+            var dateTimeOffSet = DateTimeOffset.FromUnixTimeMilliseconds(auditLog.CreatedAt);
+            var dateTime = dateTimeOffSet.DateTime;
+
+            return dateTime;
         }
 
         private static ForkRepositoryCreatedEvent? GetRepositoryCreatedByForkEvent(AuditLogEvent auditLog)

@@ -13,6 +13,6 @@ public class ObservableAuditOrganizationsClient : IObservableAuditOrganizationsC
 
     public IObservable<DateTime?> GetUserLastActivityDate(string organization, AuditLogPhraseOptions phraseOptions)
     {
-        return _client.GetUserLastActivityDate(organization, phraseOptions).ToObservable();
+        return _client.GetUserLastActivityForRepositoryDate(organization, phraseOptions).ToObservable();
     }
 }

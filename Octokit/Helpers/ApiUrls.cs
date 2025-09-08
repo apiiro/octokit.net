@@ -5225,10 +5225,14 @@ namespace Octokit
         /// Creates the relative <see cref="Uri"/> for getting the contents of the specified repository and path
         /// </summary>
         /// <param name="organization">The organization</param>
-        /// <param name="phrase">The query phrase to filter results</param>
+        /// <param name="phrase">The query phrase to filter results (optional)</param>
         /// <returns>The <see cref="Uri"/> for getting the contents of the specified repository and path</returns>
-        public static Uri AuditLog(string organization, string phrase)
+        public static Uri AuditLog(string organization, string phrase = null)
         {
+            if (string.IsNullOrWhiteSpace(phrase))
+            {
+                return "organizations/{0}/audit-log".FormatUri(organization);    
+            }
             return "organizations/{0}/audit-log?phrase={1}".FormatUri(organization, phrase);
         }
         

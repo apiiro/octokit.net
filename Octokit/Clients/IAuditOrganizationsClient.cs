@@ -7,6 +7,12 @@ namespace Octokit
     public interface IAuditOrganizationsClient
     {
         /// <summary>
+        /// Gets last activity date for an organization
+        /// </summary>
+        /// <param name="organization">The organization</param>
+        Task<DateTime?> GetLastActivityDate(string organization);
+        
+        /// <summary>
         /// Gets user last activity date for a repository
         /// </summary>
         /// <remarks>
@@ -14,7 +20,7 @@ namespace Octokit
         /// </remarks>
         /// <param name="organization">The organization</param>
         /// <param name="auditLogPhraseOptions">The query phrase options</param>
-        Task<DateTime?> GetUserLastActivityDate(string organization, AuditLogPhraseOptions auditLogPhraseOptions);
+        Task<DateTime?> GetUserLastActivityForRepositoryDate(string organization, AuditLogPhraseOptions auditLogPhraseOptions);
         
         /// <summary>
         /// Gets last visibility change event for a given repository
