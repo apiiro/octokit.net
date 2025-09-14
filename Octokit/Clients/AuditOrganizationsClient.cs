@@ -45,9 +45,9 @@ namespace Octokit
                 throw new ArgumentException("User is not supported", nameof(auditLogPhraseOptions.User));
             }
 
-            var options = new ApiOptions()
+            var options = new ApiOptions
             {
-                PageSize = 100
+                PageSize = 10
             };
 
             IDictionary<string, string> parameters = new Dictionary<string, string>();
@@ -76,7 +76,7 @@ namespace Octokit
         }
 
         [ManualRoute("GET", "/organizations/{org}/audit-log?phrase={phrase}")]
-        public async Task<ForkRepositoryCreatedEvent?> GetRepositoryCreatedByForkLastEvent(string organization, AuditLogPhraseOptions auditLogPhraseOptions)
+        public async Task<RepositoryCreatedEvent?> GetRepositoryCreatedLastEvent(string organization, AuditLogPhraseOptions auditLogPhraseOptions)
         {
             Ensure.ArgumentNotNullOrEmptyString(organization, nameof(organization));
             Ensure.ArgumentNotNull(auditLogPhraseOptions, nameof(auditLogPhraseOptions));
@@ -86,9 +86,9 @@ namespace Octokit
                 throw new ArgumentException("User is not supported", nameof(auditLogPhraseOptions.User));
             }
 
-            var options = new ApiOptions()
+            var options = new ApiOptions
             {
-                PageSize = 100
+                PageSize = 1
             };
 
             IDictionary<string, string> parameters = new Dictionary<string, string>();
@@ -102,18 +102,10 @@ namespace Octokit
                 return null;
             }
 
-            ForkRepositoryCreatedEvent? forkRepositoryCreatedEvent = null;
+            var auditLog = auditLogs.Single();
+            var repositoryCreatedEvent = GetRepositoryCreatedEvent(auditLog);
 
-            foreach (var auditLog in auditLogs)
-            {
-                forkRepositoryCreatedEvent = GetRepositoryCreatedByForkEvent(auditLog);
-                if (forkRepositoryCreatedEvent != null)
-                {
-                    break;
-                }
-            }
-
-            return forkRepositoryCreatedEvent;
+            return repositoryCreatedEvent;
         }
 
         private async Task<DateTime?> GetLastActivityDateImpl(string organization, AuditLogPhraseOptions? auditLogPhraseOptions = null)
@@ -136,37 +128,27 @@ namespace Octokit
             var auditLog = auditLogs.Single();
 
             var dateTimeOffSet = DateTimeOffset.FromUnixTimeMilliseconds(auditLog.CreatedAt);
-            var dateTime = dateTimeOffSet.DateTime;
+            var dateTime = dateTimeOffSet.UtcDateTime;
 
             return dateTime;
         }
 
-        private static ForkRepositoryCreatedEvent? GetRepositoryCreatedByForkEvent(AuditLogEvent auditLog)
+        private static RepositoryCreatedEvent GetRepositoryCreatedEvent(AuditLogEvent auditLog)
         {
-            if (auditLog.From != "tree#fork")
-            {
-                return null;
-            }
-
             var dateTimeOffSet = DateTimeOffset.FromUnixTimeMilliseconds(auditLog.CreatedAt);
-            var created = dateTimeOffSet.DateTime;
+            var created = dateTimeOffSet.UtcDateTime;
 
-            if (auditLog.Data is not JsonObject forkRepoData)
-            {
-                return null;
-            }
+            var forkRepoData = auditLog.Data as JsonObject; // This data is returned from OnPrem instances
 
-            var visibility = GetVisibilityChange(forkRepoData, "visibility");
-            GetDataItem<string>(forkRepoData, "fork_parent", out var forkPatentFullRepoName);
-            GetDataItem<bool?>(forkRepoData, "public_repo", out var isPublic);
+            var visibility = GetRepositoryVisibility(auditLog.Visibility) ?? GetVisibilityChange(forkRepoData, "visibility");
+            var isPublic = auditLog.PublicRepo ?? GetDataItem<bool?>(forkRepoData, "public_repo");
 
-            return new ForkRepositoryCreatedEvent(
+            return new RepositoryCreatedEvent(
                 auditLog.Actor,
                 auditLog.ActorId,
                 created,
                 auditLog.Repo,
                 auditLog.Org,
-                forkPatentFullRepoName,
                 isPublic,
                 visibility
             );
@@ -174,23 +156,20 @@ namespace Octokit
 
         private static RepositoryVisibilityChangeEvent? GetRepositoryVisibilityChangeEvent(AuditLogEvent auditLog)
         {
-            if (auditLog.From != "edit_repositories#set_visibility")
-            {
-                return null;
-            }
-
             var dateTimeOffSet = DateTimeOffset.FromUnixTimeMilliseconds(auditLog.CreatedAt);
-            var created = dateTimeOffSet.DateTime;
+            var created = dateTimeOffSet.UtcDateTime;
             var actor = auditLog.Actor;
             var actorId = auditLog.ActorId;
 
-            if (auditLog.Data is not JsonObject visibilityChangeData)
-            {
-                return null;
-            }
+            var visibilityChangeData = auditLog.Data as JsonObject; // This data is returned from OnPrem instances
 
-            var fromVisibility = GetVisibilityChange(visibilityChangeData, "previous_visibility");
-            var toVisibility = GetVisibilityChange(visibilityChangeData, "visibility");
+            /*
+             * Audit logs responses are not returned in the same schema format from SAAS and On Prem instances
+             * AuditLog's PreviousVisibility and Visibility values returned from SAAS instances but not from OnPrem instances
+             * These values are found in on prem responses, in a separate json object
+             */
+            var fromVisibility = GetRepositoryVisibility(auditLog.PreviousVisibility) ?? GetVisibilityChange(visibilityChangeData, "previous_visibility");
+            var toVisibility = GetRepositoryVisibility(auditLog.Visibility) ?? GetVisibilityChange(visibilityChangeData, "visibility");
 
             if (fromVisibility == null || toVisibility == null)
             {
@@ -200,13 +179,14 @@ namespace Octokit
             return new RepositoryVisibilityChangeEvent(actor, actorId, created, fromVisibility.Value, toVisibility.Value);
         }
 
-        private static RepositoryVisibility? GetVisibilityChange(JsonObject data, string visibilityKey)
+        private static RepositoryVisibility? GetVisibilityChange(JsonObject? data, string visibilityKey)
         {
-            if (!GetDataItem<string>(data, visibilityKey, out var visibility))
-            {
-                return null;
-            }
+            var visibility = GetDataItem<string>(data, visibilityKey);
+            return string.IsNullOrEmpty(visibility) ? null : GetRepositoryVisibility(visibility);
+        }
 
+        private static RepositoryVisibility? GetRepositoryVisibility(string? visibility)
+        {
             if (Enum.TryParse<RepositoryVisibility>(visibility, true, out var repositoryVisibility))
             {
                 return repositoryVisibility;
@@ -215,21 +195,14 @@ namespace Octokit
             return null;
         }
 
-        private static bool GetDataItem<T>(JsonObject data, string key, out T? result)
+        private static T? GetDataItem<T>(JsonObject? data, string key)
         {
-            result = default;
-            if (!data.TryGetValue(key, out var value))
+            if (data == null || !data.TryGetValue(key, out var value))
             {
-                return false;
+                return default;
             }
 
-            if (value is not T finalValue)
-            {
-                return false;
-            }
-
-            result = finalValue;
-            return true;
+            return value is T finalValue ? finalValue : default;
         }
     }
 }
