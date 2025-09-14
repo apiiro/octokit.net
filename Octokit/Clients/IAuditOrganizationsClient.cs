@@ -40,6 +40,6 @@ namespace Octokit
         /// </remarks>
         /// <param name="organization">The organization</param>
         /// <param name="auditLogPhraseOptions">The query phrase options</param>
-        Task<ForkRepositoryCreatedEvent?> GetRepositoryCreatedByForkLastEvent(string organization, AuditLogPhraseOptions auditLogPhraseOptions);
+        Task<RepositoryCreatedEvent?> GetRepositoryCreatedLastEvent(string organization, AuditLogPhraseOptions auditLogPhraseOptions);
     }
 }
