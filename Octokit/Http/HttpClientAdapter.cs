@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -30,6 +30,17 @@ namespace Octokit.Internal
             Ensure.ArgumentNotNull(getHandler, nameof(getHandler));
 
             _http = new HttpClient(new RedirectHandler { InnerHandler = getHandler() });
+        }
+
+        /// <summary>
+        /// Creates an adapter using an externally provided <see cref="HttpClient"/>.
+        /// </summary>
+        /// <param name="httpClient">A pre-configured <see cref="HttpClient"/> instance</param>
+        public HttpClientAdapter(HttpClient httpClient)
+        {
+            Ensure.ArgumentNotNull(httpClient, nameof(httpClient));
+
+            _http = httpClient;
         }
 
         /// <summary>
