@@ -56,7 +56,7 @@ namespace Octokit
             var phrase = auditLogPhraseOptions.BuildPhrase(organization, "repo.access");
             var auditLogs = await ApiConnection.Get<List<AuditLogEvent>>(ApiUrls.AuditLog(organization, phrase), parameters);
 
-            if (!auditLogs.Any())
+            if (auditLogs is null || !auditLogs.Any())
             {
                 return null;
             }
@@ -97,7 +97,7 @@ namespace Octokit
             var phrase = auditLogPhraseOptions.BuildPhrase(organization, "repo.create");
             var auditLogs = await ApiConnection.Get<List<AuditLogEvent>>(ApiUrls.AuditLog(organization, phrase), parameters);
 
-            if (!auditLogs.Any())
+            if (auditLogs is null || !auditLogs.Any())
             {
                 return null;
             }
@@ -120,7 +120,7 @@ namespace Octokit
             var phrase = auditLogPhraseOptions?.BuildPhrase(organization);
             var auditLogs = await ApiConnection.Get<List<AuditLogEvent>>(ApiUrls.AuditLog(organization, phrase), parameters);
 
-            if (!auditLogs.Any())
+            if (auditLogs is null || !auditLogs.Any())
             {
                 return null;
             }
